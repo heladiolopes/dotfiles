@@ -1,0 +1,12 @@
+{
+  "shortcuts": [
+    {
+      "command": "runmenu:restart-and-run-all",
+      "keys": [
+        "0",
+        "9"
+      ],
+      "selector": "[data-jp-kernel-user]:focus"
+    }
+  ]
+}
