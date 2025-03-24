@@ -132,3 +132,9 @@ export LD_LIBRARY_PATH=$HOME/opt/lib:$LD_LIBRARY_PATH
 
 # Makefile auto
 complete -W "\`grep -oE '^[a-zA-Z0-9_.-]+:([^=]|$)' ?akefile | sed 's/[^a-zA-Z0-9_.-]*$//'\`" make
+
+# Home Brew Init
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+
+# Starship Init
+eval "$(starship init bash)"
