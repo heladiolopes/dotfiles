@@ -1,0 +1,59 @@
+PROMPT=">>"
+
+RED="\[\033[1;31m\]"
+GREEN="\[\033[1;32m\]"
+YELLOW="\[\033[1;33m\]"
+BLUE="\[\033[1;34m\]"
+CYAN="\[\033[1;36m\]"
+GRAY="\[\033[1;37m\]"
+RESET="\[\033[0m\]"
+
+get_cwd() {
+    [[ $PWD == $HOME* ]] && echo "~${PWD#$HOME}" || echo "$PWD"
+}
+
+get_python_env() {
+    if [ -n "$CONDA_DEFAULT_ENV" ]; then
+        echo -ne "$CYAN($CONDA_DEFAULT_ENV)$RESET"
+    elif [ -n "$VIRTUAL_ENV" ]; then
+        name=$(basename "$VIRTUAL_ENV")
+        if [[ "$name" =~ ^([a-zA-Z0-9._-]+)-[a-zA-Z0-9_-]+-(py[0-9.]+)$ ]]; then
+            echo -ne "$CYAN(${BASH_REMATCH[1]}-${BASH_REMATCH[2]})$RESET"
+        else
+            echo -ne "$CYAN($name)$RESET"
+        fi
+    fi
+}
+
+get_git_branch() {
+    branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null)
+    [ -z "$branch" ] && return
+    [[ -n $(git status --porcelain 2>/dev/null) ]] && dirty="*" || dirty=""
+    echo -ne " ($CYAN$branch$RED$dirty$RESET)"
+}
+
+fill_with_dots() {
+  local prefix="$*"
+  local clean=$(echo -ne "$prefix" | sed 's/\x1b\[[0-9;]*m//g')
+  local clean=$(echo -ne "$clean" | sed 's/\\\[//g' | sed 's/\\\]//g')
+
+  local width=$(tput cols)
+  local len=$(echo -ne "$clean" | awk '{ print length }')
+  local dots=$((width - len))
+
+  [ $dots -gt 0 ] && printf "%*s" "$dots" '' | tr ' ' '-'
+}
+
+PROMPT_COMMAND='
+    context="$GREEN$(whoami)@$(hostname)$RESET"
+    workdir="$BLUE$(get_cwd)$RESET"
+
+    prefix="$context:$workdir$(get_git_branch) "
+    venv=" $(get_python_env)"
+    fill="$BLUE$(fill_with_dots "$prefix$venv")$RESET"
+
+    line1="$prefix$fill$venv"
+    line2="$BLUE$PROMPT$RESET"
+
+    PS1="${line1}\n${line2} "
+'

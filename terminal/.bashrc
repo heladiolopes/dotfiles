@@ -136,5 +136,5 @@ complete -W "\`grep -oE '^[a-zA-Z0-9_.-]+:([^=]|$)' ?akefile | sed 's/[^a-zA-Z0-
 # Home Brew Init
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
-# Starship Init
-eval "$(starship init bash)"
+# Source Custom Prompt
+source ~/.bash_prompt
