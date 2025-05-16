@@ -26,27 +26,39 @@ get_python_env() {
 }
 
 get_git_branch() {
-    local branch added_count mod_count untracked_count
-    local added="" modified="" untracked=""
+    local branch added_count mod_count untracked_count ahead behind
+    local added="" modified="" untracked="" sync=""
 
-    # Nome do branch
     branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null) || return
 
-    # Contagens
     added_count=$(git diff --cached --name-only 2>/dev/null | wc -l)
     mod_count=$(git diff --name-only 2>/dev/null | wc -l)
     untracked_count=$(git ls-files --others --exclude-standard 2>/dev/null | wc -l)
 
-    # Formata só se > 0
     [ "$added_count" -gt 0 ] && added="+$added_count"
     [ "$mod_count" -gt 0 ] && modified="!$mod_count"
     [ "$untracked_count" -gt 0 ] && untracked="?$untracked_count"
 
-    # Junta tudo
-    local status="$added $modified $untracked"
-    status=$(echo "$status" | xargs)  # remove espaços extras
+    local GIT_COLOR=$YELLOW
+    if git rev-parse --abbrev-ref --symbolic-full-name @{u} >/dev/null 2>&1; then
+        read ahead behind < <(git rev-list --left-right --count HEAD...@{u} 2>/dev/null)
 
-    echo -ne " ($YELLOW$branch${status:+ $status}$RESET)"
+        if [ "$ahead" -gt 0 ]; then
+            GIT_COLOR=$GREEN
+        fi
+
+        if [ "$behind" -gt 0 ]; then
+            GIT_COLOR+=$RED
+        fi
+
+        [ "$ahead" -gt 0 ] && sync+="⇡$ahead"
+        [ "$behind" -gt 0 ] && sync+="⇣$behind"
+    fi
+
+    local status="$sync $added $modified $untracked"
+    status=$(echo "$status" | xargs)
+
+    echo -ne " ($GIT_COLOR$branch${status:+ $status}$RESET)"
 }
 
 get_terraform_workspace() {
