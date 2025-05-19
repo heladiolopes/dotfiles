@@ -1,0 +1,23 @@
+{
+  "name": "Material Deep Ocean",
+  "foreground": "#E0E0E0",
+  "background": "#0F111A",
+  "cursorColor": "#FFFFFF",
+  "selectionBackground": "#2E3C43",
+  "black": "#000000",
+  "red": "#FF1744",
+  "green": "#00E676",
+  "yellow": "#FFD600",
+  "blue": "#2979FF",
+  "purple": "#D500F9",
+  "cyan": "#00E5FF",
+  "white": "#F5F5F5",
+  "brightBlack": "#616161",
+  "brightRed": "#FF5252",
+  "brightGreen": "#69F0AE",
+  "brightYellow": "#FFFF00",
+  "brightBlue": "#448AFF",
+  "brightPurple": "#E040FB",
+  "brightCyan": "#18FFFF",
+  "brightWhite": "#FFFFFF"
+}

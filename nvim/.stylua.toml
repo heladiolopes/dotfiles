@@ -1,0 +1,19 @@
+# Maximum line width before breaking
+column_width = 150
+
+# Use spaces for indentation (not tabs)
+indent_type = "Spaces"
+indent_width = 2
+
+# Prefer double quotes unless single quotes are necessary
+quote_style = "AutoPreferDouble"
+
+# always include parentheses in function calls
+call_parentheses = "Always"
+
+# Never collapse simple statements into a single line
+collapse_simple_statement = "Never"
+
+# use unix-style line endings (lf)
+line_endings = "Unix"
+
