@@ -136,5 +136,9 @@ complete -W "\`grep -oE '^[a-zA-Z0-9_.-]+:([^=]|$)' ?akefile | sed 's/[^a-zA-Z0-
 # Home Brew Init
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
+# Enable history search with up/down arrows by prefix
+bind '"\e[A": history-search-backward'
+bind '"\e[B": history-search-forward'
+
 # Source Custom Prompt
 source ~/.bash_prompt
