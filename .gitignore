@@ -1,1 +1,5 @@
+# Git username and e-mail
+git/.config/git/creds.config
+ 
 .mypy_cache/
+

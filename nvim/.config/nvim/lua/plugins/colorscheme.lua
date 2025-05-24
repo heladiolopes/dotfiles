@@ -15,7 +15,7 @@ return {
         "fidget",
         -- "flash",
         "gitsigns",
-        -- "illuminate",
+        "illuminate",
         "indent-blankline",
         "mini",
         "neo-tree",

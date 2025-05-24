@@ -20,7 +20,7 @@ return {
         themable = true,
         numbers = "none",
         diagnostics = "nvim_lsp",
-        separator_style = "slant",
+        separator_style = "thick",
         color_icons = true,
         enforce_regular_tabs = false,
         always_show_bufferline = true,
@@ -44,14 +44,18 @@ return {
 
     -- stylua: ignore start
     -- Map para picking de buffers
-    vim.keymap.set("n", "<leader>bb", "<cmd>BufferLinePick<CR>",                 { desc = "Buffer: [[B]]uffer Pick"         })
-    vim.keymap.set("n", "<leader>bq", function() bufremove.delete(0, false) end, { desc = "Buffer: [B]uffer [Q]uit"         })
-    vim.keymap.set("n", "<leader>bc", "<cmd>BufferLinePickClose<CR>",            { desc = "Buffer: [B]uffer [C]lose Pick"   })
-    vim.keymap.set("n", "<leader>bo", "<cmd>BufferLineCloseOthers<CR>",          { desc = "Buffer: [B]uffer Close [O]thers" })
-    vim.keymap.set("n", "<S-l>",      "<cmd>BufferLineCycleNext<CR>",            { desc = "Buffer: Next"                    })
-    vim.keymap.set("n", "<S-Left>",   "<cmd>BufferLineCycleNext<CR>",            { desc = "Buffer: Next"                    })
-    vim.keymap.set("n", "<S-h>",      "<cmd>BufferLineCyclePrev<CR>",            { desc = "Buffer: Previous"                })
-    vim.keymap.set("n", "<S-Right>",  "<cmd>BufferLineCyclePrev<CR>",            { desc = "Buffer: Previous"                })
+    vim.keymap.set("n", "<leader>bb", "<cmd>BufferLinePick<CR>",                 { desc = "Buffer Pick"         })
+    vim.keymap.set("n", "<leader>bq", function() bufremove.delete(0, false) end, { desc = "Buffer Quit"         })
+    vim.keymap.set("n", "<leader>bc", "<cmd>BufferLinePickClose<CR>",            { desc = "Buffer Close Pick"   })
+    vim.keymap.set("n", "<leader>bo", "<cmd>BufferLineCloseOthers<CR>",          { desc = "Buffer Close Others" })
+    vim.keymap.set("n", "<S-l>",      "<cmd>BufferLineCycleNext<CR>",            { desc = "Next"                    })
+    vim.keymap.set("n", "<S-Left>",   "<cmd>BufferLineCycleNext<CR>",            { desc = "Next"                    })
+    vim.keymap.set("n", "<S-h>",      "<cmd>BufferLineCyclePrev<CR>",            { desc = "Previous"                })
+    vim.keymap.set("n", "<S-Right>",  "<cmd>BufferLineCyclePrev<CR>",            { desc = "Previous"                })
     -- stylua: ignore end
+    vim.cmd([[
+      highlight! link BufferLineFill Normal
+      highlight! link BufferLineBackground Normal
+    ]])
   end,
 }

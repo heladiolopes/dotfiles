@@ -126,3 +126,9 @@ eval "$(pyenv virtualenv-init -)"
 # Home Brew Init
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
+# Redirect zcompdump to custom cache
+export ZSH_COMPDUMP="$HOME/.cache/zsh/zcompdump"
+
+# Avoid creating ~/.lesshst file
+export LESSHISTFILE=-
+

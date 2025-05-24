@@ -78,16 +78,16 @@ return {
           end
 
           -- stylua: ignore start
-          map('<leader>ghh', vim.lsp.buf.hover,                                          '[H]over')
-          map('<leader>grn', vim.lsp.buf.rename,                                         '[R]e[n]ame')
-          map('<leader>gca', vim.lsp.buf.code_action,                                    'Goto [C]ode [A]ction', { 'n', 'x' })
-          map('<leader>grr', require('telescope.builtin').lsp_references,                'Goto [R]efe[r]ences')
-          map('<leader>gip', require('telescope.builtin').lsp_implementations,           'Goto [I]m[p]lementation')
-          map('<leader>gdf', require('telescope.builtin').lsp_definitions,               'Goto [D]e[f]inition')
-          map('<leader>gdc', vim.lsp.buf.declaration,                                    'Goto [D]e[c]laration')
-          map('<leader>gds', require('telescope.builtin').lsp_document_symbols,          'Open [D]ocument [S]ymbols')
-          map('<leader>gws', require('telescope.builtin').lsp_dynamic_workspace_symbols, 'Open [W]orkspace [S]ymbols')
-          map('<leader>gtd', require('telescope.builtin').lsp_type_definitions,          'Goto [T]ype [D]efinition')
+          map('ghh', vim.lsp.buf.hover,                                          'Hover')
+          map('grn', vim.lsp.buf.rename,                                         'Rename')
+          map('gca', vim.lsp.buf.code_action,                                    'Goto Code Action', { 'n', 'x' })
+          map('grr', require('telescope.builtin').lsp_references,                'Goto References')
+          map('gip', require('telescope.builtin').lsp_implementations,           'Goto Implementation')
+          map('gdf', require('telescope.builtin').lsp_definitions,               'Goto Definition')
+          map('gdc', vim.lsp.buf.declaration,                                    'Goto Declaration')
+          map('gds', require('telescope.builtin').lsp_document_symbols,          'Open Document Symbols')
+          map('gws', require('telescope.builtin').lsp_dynamic_workspace_symbols, 'Open Workspace Symbols')
+          map('gtd', require('telescope.builtin').lsp_type_definitions,          'Goto Type Definition')
 
           -- This function resolves a difference between neovim nightly (version 0.11) and stable (version 0.10)
           local function client_supports_method(client, method, bufnr)

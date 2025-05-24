@@ -43,4 +43,7 @@ return {
   {
     "NMAC427/guess-indent.nvim",
   },
+  {
+    "RRethy/vim-illuminate",
+  },
 }

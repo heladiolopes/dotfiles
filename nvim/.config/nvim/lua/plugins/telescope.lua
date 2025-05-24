@@ -43,16 +43,17 @@ return {
     pcall(require("telescope").load_extension, "ui-select")
 
     -- Keymaps
-    --  See `:help telescope.builtin`
     -- stylua: ignore start
     local builtin = require("telescope.builtin")
-    vim.keymap.set("n", "<leader>ff", builtin.find_files,  { desc = "Telescope: [F]ind [F]iles"   })
-    vim.keymap.set("n", "<leader>fk", builtin.keymaps,     { desc = "Telescope: [F]ind [K]eymaps" })
-    vim.keymap.set("n", "<leader>fg", builtin.live_grep,   { desc = "Telescope: [F]ind [G]rep"    })
-    vim.keymap.set("n", "<leader>fr", builtin.oldfiles,    { desc = "Telescope: [F]ind [R]ecent"  })
-    vim.keymap.set("n", "<leader>fb", builtin.buffers,     { desc = "Telescope: [F]ind [B]uffers" })
-    vim.keymap.set("n", "<leader>fh", builtin.help_tags,   { desc = "Telescope: [F]ind [H]elp "   })
-    vim.keymap.set("n", "<leader>ft", builtin.colorscheme, { desc = "Telescope: [F]ind [T]hemes"  })
+    vim.keymap.set("n", "<leader>ff", builtin.find_files,  { desc = "Find Files"   })
+    vim.keymap.set("n", "<leader>fk", builtin.keymaps,     { desc = "Find Keymaps" })
+    vim.keymap.set("n", "<leader>fg", builtin.live_grep,   { desc = "Find Grep"    })
+    vim.keymap.set("n", "<leader>fr", builtin.oldfiles,    { desc = "Find Recent"  })
+    vim.keymap.set("n", "<leader>fb", builtin.buffers,     { desc = "Find Buffers" })
+    vim.keymap.set("n", "<leader>fh", builtin.help_tags,   { desc = "Find Help "   })
+    vim.keymap.set("n", "<leader>ft", builtin.colorscheme, { desc = "Find Themes"  })
+
+    vim.keymap.set("n", "<leader>gs", builtin.git_status,  { desc = "Git Status"   })
     -- stylua: ignore end
   end,
 }

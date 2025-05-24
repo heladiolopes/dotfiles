@@ -1,82 +1,59 @@
--- Set <space> as the leader key
--- See `:help mapleader`
---  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
-vim.g.mapleader = " "
-vim.g.maplocalleader = " "
+-- make it simpple
+local opt = vim.opt
+local g = vim.g
 
--- Set to true if you have a Nerd Font installed and selected in the terminal
-vim.g.have_nerd_font = true
-
--- Enable terminal true color
-vim.opt.termguicolors = true
-
--- [[ Setting options ]]
--- See `:help vim.opt`
-
--- Make line numbers default
-vim.opt.number = true
--- Relative line numbers, to help with jumping.
--- vim.opt.relativenumber = true
-
--- Enable mouse mode, can be useful for resizing splits for example!
-vim.opt.mouse = "a"
-
--- Don't show the mode, since it's already in the status line
-vim.opt.showmode = false
-
--- Sync clipboard between OS and Neovim.
---  Schedule the setting after `UiEnter` because it can increase startup-time.
---  Remove this option if you want your OS clipboard to remain independent.
---  See `:help 'clipboard'`
+-- General settings
+opt.showmode = false -- disable show the mode, already in the status line
+opt.cursorline = true -- highlight line the cursor is on
 vim.schedule(function()
-  vim.opt.clipboard = "unnamedplus"
+  opt.clipboard = "unnamedplus" -- enable system clipboard for yank
 end)
 
--- Enable break indent
-vim.opt.breakindent = true
+-- Identation settings
+opt.expandtab = true -- Pressing the TAB key will insert spaces instead of a TAB character
+opt.tabstop = 2 -- A TAB character looks like 4 spaces
+opt.softtabstop = 2 -- Number of spaces inserted instead of a TAB character
+opt.shiftwidth = 2 -- Number of spaces inserted when indenting
 
--- Save undo history
-vim.opt.undofile = true
+-- Display settings
+opt.ignorecase = true -- Ignore case in search patterns
+opt.smartcase = true -- Override `ignorecase` if the search contains uppercase letters
+opt.mouse = "a" -- Enable mouse in all modes
 
--- Case-insensitive searching UNLESS \C or one or more capital letters in the search term
-vim.opt.ignorecase = true
-vim.opt.smartcase = true
+-- Line Numbers
+opt.number = true -- Show absolute line number on the cursor line
+-- opt.relativenumber = true -- Show relative line numbers for easier navigation
+opt.ruler = false -- Disable the ruler, as the global statusline can handle this
 
--- Keep signcolumn on by default
-vim.opt.signcolumn = "yes"
+-- Split Windows Behavior
+opt.signcolumn = "yes" -- Always show the sign column to prevent text shifting
+opt.splitbelow = true -- New horizontal splits will open below the current window
+opt.splitright = true -- New vertical splits will open to the right of the current window
 
--- Decrease update time
-vim.opt.updatetime = 250
+-- Appearance
+g.have_nerd_font = true -- Enable nerd font
+opt.termguicolors = true -- Enable 24-bit RGB colors for better syntax highlighting and theming
+opt.background = "dark" -- colorschemes that can be light or dark will be made dark
 
--- Decrease mapped sequence wait time
-vim.opt.timeoutlen = 300
+-- Performance
+opt.timeoutlen = 300 -- Time in milliseconds to wait for a mapped sequence to complete
+opt.undofile = true -- Enable persistent undo, allowing you to undo changes even after reopening the file
+opt.updatetime = 250 -- Time in milliseconds before writing the swap file to disk (used by gitsigns and others)
 
--- Configure how new splits should be opened
-vim.opt.splitright = true
-vim.opt.splitbelow = true
+-- Scrolling
+opt.scrolloff = 10 -- Keep at least 10 lines visible above and below the cursor during scrolling
 
--- Sets how neovim will display certain whitespace characters in the editor.
---  See `:help 'list'`
---  and `:help 'listchars'`
-vim.opt.list = true
-vim.opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
+-- Disable netrw
+g.loaded_netrw = 1 -- Prevent netrw from loading, avoiding conflicts with nvim-tree
+g.loaded_netrwPlugin = 1 -- Disable the netrw plugin as well, fully disabling netrw
 
--- Preview substitutions live, as you type!
-vim.opt.inccommand = "split"
-
--- Show which line your cursor is on
-vim.opt.cursorline = true
-
--- Minimal number of screen lines to keep above and below the cursor.
-vim.opt.scrolloff = 10
+-- Other settings
+opt.breakindent = true -- Enable break indent
+opt.list = true -- Sets how neovim will display certain whitespace characters in the editor.
+opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
+opt.inccommand = "split" -- Preview substitutions live, as you type!
 
 -- if performing an operation that would fail due to unsaved changes in the buffer (like `:q`),
 -- instead raise a dialog asking if you wish to save the current file(s)
 -- See `:help 'confirm'`
-vim.opt.confirm = true
-
--- Tabs vs spaces
-vim.opt.expandtab = true -- Pressing the TAB key will insert spaces instead of a TAB character
-vim.opt.tabstop = 2 -- A TAB character looks like 4 spaces
-vim.opt.softtabstop = 2 -- Number of spaces inserted instead of a TAB character
-vim.opt.shiftwidth = 2 -- Number of spaces inserted when indenting
+opt.confirm = true

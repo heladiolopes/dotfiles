@@ -5,9 +5,9 @@ return {
     preset = "helix",
     delay = 0,
     spec = {
-      { "<leader>g", group = "LSP" },
       { "<leader>b", group = "BufferLine" },
       { "<leader>f", group = "Telescope" },
+      { "<leader>g", group = "Git" },
     },
   },
   keys = {
