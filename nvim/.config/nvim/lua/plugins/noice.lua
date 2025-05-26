@@ -47,7 +47,7 @@ return {
     -- Notify setup
     require("notify").setup({
       stages = "fade_in_slide_out",
-      timeout = 1000,
+      timeout = 3000,
       render = "simple",
     })
   end,
