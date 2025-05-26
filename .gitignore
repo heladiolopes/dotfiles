@@ -1,5 +1,11 @@
 # Git username and e-mail
 git/.config/git/creds.config
- 
+
+# Executable binaries
+bin/.local/bin/*
+!bin/.local/bin/
+!bin/.local/bin/.gitkeep
+
+# Cache
 .mypy_cache/
 
