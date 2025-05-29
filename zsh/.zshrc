@@ -82,9 +82,16 @@ alias cat='ccat'
 alias ..="cd .."
 alias ...="cd ../.."
 alias ....="cd ../../.."
+alias inspect="du -d 1 -h | sort -h"
 alias randint="rand --type int"
 alias randstr="rand --type str"
 alias randhex="rand --type hex --length 7"
+alias flushpoetry="poetry cache list | awk '{print \$1}' | xargs -I {} poetry cache clear --all {}"
+alias flushpip="pip cache purge"
+alias flushpyc="find . -type d -name '__pycache__' -exec rm -r {} + && find . -type f -name '*.pyc' -delete"
+alias flushgo="go clean -cache"
+alias flushbrew="brew cleanup --prune=all"
+alias flushprecommit="pre-commit clean"
 
 # Redirect zcompdump to custom cache
 export ZSH_COMPDUMP="$HOME/.cache/zsh/zcompdump"
