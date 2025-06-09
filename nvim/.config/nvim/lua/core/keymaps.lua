@@ -17,6 +17,9 @@ keymap.set("i", "<C-l>", "<Right>", { desc = "Move right" })
 keymap.set("i", "<C-j>", "<Down>",  { desc = "Move down"  })
 keymap.set("i", "<C-k>", "<Up>",    { desc = "Move up"    })
 
+keymap.set("i", "<C-u>", "<C-u>zz", { desc = "Scroll up"   })
+keymap.set("i", "<C-d>", "<C-d>zz", { desc = "Scroll down" })
+
 keymap.set("i", "<C-b>", "<ESC>^i", { desc = "Move to the beginning of the line" })
 keymap.set("i", "<C-e>", "<End>",   { desc = "Move to the end of the line"       })
 

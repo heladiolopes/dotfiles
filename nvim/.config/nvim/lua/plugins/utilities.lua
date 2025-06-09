@@ -46,4 +46,8 @@ return {
   {
     "RRethy/vim-illuminate",
   },
+  {
+    -- Multi line editing
+    "mg979/vim-visual-multi",
+  },
 }

@@ -22,7 +22,7 @@ opt.mouse = "a" -- Enable mouse in all modes
 
 -- Line Numbers
 opt.number = true -- Show absolute line number on the cursor line
--- opt.relativenumber = true -- Show relative line numbers for easier navigation
+opt.relativenumber = true -- Show relative line numbers for easier navigation
 opt.ruler = false -- Disable the ruler, as the global statusline can handle this
 
 -- Split Windows Behavior
