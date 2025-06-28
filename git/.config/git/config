@@ -1,6 +1,77 @@
+[include]
+	path = ~/.config/git/creds.config
+
+[user]
+  name = Heladio Lopes
+  email = heladio.lopes@gmail.com
+
+[commit]
+  template = ~/.config/git/template
+
+[core]
+	compression = 9
+  editor = nvim
+  ignorecase = true
+  autocrlf = input
+  pager = diff-so-fancy | less --tabs=4 -RFX
+
+[advice]
+  addEmptyPathspec = false
+  pushNonFastForward = false
+  statusHints = false
+
+[diff]
+  context = 3  # less context in diffs
+  renames = copies  # detect copies as renames in diffs
+  interHunkContext = 10  # merge near hunks in diffs
+
 [init]
 	defaultBranch = develop
 
+[log]
+  abbrevCommit = true  # short commits
+  graphColors = blue,yellow,cyan,magenta,green,red
+
+[status]
+  branch = true
+  short = true
+  showStash = true
+  showUntrackedFiles = all  # show individual untracked files
+
+[pager]
+  branch = false # no pager for 'git branch'
+  tag = false    # no pager for 'git tag'
+
+[push]
+  autoSetupRemote = true # easier to push new branches
+  default = current      # push only current branch by default
+  followTags = true      # push also tags
+
+[pull]
+  rebase = false
+
+[pack]
+  threads = 0        # use all available threads
+  windowMemory = 1g  # use 1g of memory for pack window
+  packSizeLimit = 1g # max size of a packfile
+
+# Integrity
+[transfer]
+  fsckObjects = true
+
+[receive]
+  fsckObjects = true
+
+[fetch]
+  fsckObjects = true
+
+[branch]
+  sort = -committerdate
+
+[tag]
+   sort = -taggerdate
+
+# Aliases
 [alias]
 	d = diff
 	cm = commit -sm
@@ -9,19 +80,43 @@
 	lg2 = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(auto)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)'
 	lg = !"git lg1"
 
+# Colors
 [color]
 	status = auto
-	diff = auto
-	branch = auto
 	interactive = auto
-	ui = auto
+  ui = auto
 
-[core]
-	compression = 9
-	editor = nvim
+[color "branch"]
+  current  = magenta
+  local    = default
+  remote   = yellow
+  upstream = green
+  plain    = blue
 
-[pull]
-	rebase = false
+[color "diff"]
+  meta       = black bold
+  frag       = magenta
+  context    = white
+  whitespace = yellow reverse
+  old        = red
 
-[include]
-	path = ~/.config/git/creds.config
+[color.decorate]
+  HEAD = red
+  branch = blue
+  tag = yellow
+  remoteBranch = magenta
+
+[interactive]
+  diffFilter = diff-so-fancy --patch
+  singlekey = true
+
+# Third-party: diff-so-fancy
+[diff-so-fancy]
+  markEmptyLines = false
+
+# URL shortcuts
+[url "git@github.com:"]
+    insteadOf = "gh:"
+
+[url "git@github.com:heladiolopes/"]
+    insteadOf = "hsl:"

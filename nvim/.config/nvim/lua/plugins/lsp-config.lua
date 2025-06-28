@@ -39,12 +39,33 @@ return {
         gopls = {
           cmd = { "gopls" },
           filetypes = { "go", "gomod", "gowork", "gotmpl" },
-          settiings = {
+          settings = {
             gopls = {
               completeUnimported = true,
               usePlaceholders = true,
               analyses = {
                 unusedparams = true,
+              },
+            },
+          },
+        },
+        ansiblels = {
+          cmd = { "ansible-language-server", "--stdio" },
+          filetypes = { "yaml", "yml" },
+          settings = {
+            ansible = {
+              ansible = {
+                path = "ansible",
+              },
+              python = {
+                interpreterPath = "python",
+              },
+              validation = {
+                enabled = true,
+                lint = {
+                  enabled = true,
+                  path = "ansible-lint",
+                },
               },
             },
           },

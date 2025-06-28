@@ -55,7 +55,6 @@ return {
     -- stylua: ignore end
     vim.cmd([[
       highlight! link BufferLineFill Normal
-      highlight! link BufferLineBackground Normal
     ]])
   end,
 }

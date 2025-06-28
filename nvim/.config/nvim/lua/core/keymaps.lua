@@ -17,9 +17,6 @@ keymap.set("i", "<C-l>", "<Right>", { desc = "Move right" })
 keymap.set("i", "<C-j>", "<Down>",  { desc = "Move down"  })
 keymap.set("i", "<C-k>", "<Up>",    { desc = "Move up"    })
 
-keymap.set("i", "<C-u>", "<C-u>zz", { desc = "Scroll up"   })
-keymap.set("i", "<C-d>", "<C-d>zz", { desc = "Scroll down" })
-
 keymap.set("i", "<C-b>", "<ESC>^i", { desc = "Move to the beginning of the line" })
 keymap.set("i", "<C-e>", "<End>",   { desc = "Move to the end of the line"       })
 
@@ -37,8 +34,14 @@ keymap.set("n", "<C-l>", "<C-w><C-l>", { desc = "Move focus to the right window"
 keymap.set("n", "<C-j>", "<C-w><C-j>", { desc = "Move focus to the lower window" })
 keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper window" })
 
-keymap.set("n", "<C-up>",   "gg", { desc = "Move to first line" })
-keymap.set("n", "<C-down>", "G",  { desc = "Move to last line" })
+keymap.set("n", "<C-u>", "<C-u>zz", { desc = "Scroll up"   })
+keymap.set("n", "<C-d>", "<C-d>zz", { desc = "Scroll down" })
+
+keymap.set("n", "gg", "gg0", { desc = "Move to first line" })
+keymap.set("n", "G" , "G$",  { desc = "Move to last line" })
+
+-- Yank whole file
+keymap.set("n", "yf", "<cmd> %y+ <CR>", { desc = "Yank whole file" })
 
 -- save file
 keymap.set("n", "<C-s>", "<cmd>w<CR>", { desc = "Save File" })

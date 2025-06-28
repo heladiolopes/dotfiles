@@ -8,8 +8,8 @@ fi
 # If you come from bash you might have to change your $PATH.
 export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
 
-# Home Brew Init
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+# # Home Brew Init
+# eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
 # Set Neovim as default editor
 export EDITOR='vim'
