@@ -1,0 +1,20 @@
+@define-color base         #0f111a;
+@define-color surface0     #2e3c43;
+@define-color red          #ff1744;
+@define-color green        #00e676;
+@define-color yellow       #ffd600;
+@define-color blue         #2979ff;
+@define-color purple       #d500f9;
+@define-color cyan         #00e5ff;
+@define-color white        #e0e0e0;
+@define-color brightred    #ff5252;
+@define-color brightgreen  #69f0ae;
+@define-color brightyellow #ffff00;
+@define-color brightblue   #448aff;
+@define-color brightpurple #e040fb;
+@define-color brightcyan   #18ffff;
+@define-color text         #e0e0e0;
+@define-color subtext      #b0bec5;
+@define-color overlay      #78909c;
+@define-color crust        #000000;
+

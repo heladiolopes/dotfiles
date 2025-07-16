@@ -1,0 +1,20 @@
+configuration{
+  modi:                    "combi,window,drun,run,ssh";
+  icon-theme:              "Adwaita";
+  show-icons:              true;
+  terminal:                "kitty";
+  location:                0;
+  disable-history:         false;
+  hide-scrollbar:          true;
+  display-drun:            "   Drun ";
+  display-run:             "   Run ";
+  display-window:          "   Window";
+  display-combi:           "   All ";
+  display-ssh:             "   SSH ";
+  sidebar-mode:            true;
+  drun-display-format:     "{icon} {name}";
+  window-format:           "{w} · {c} · {t}";
+}
+
+@theme "~/.config/rofi/theme.rasi"
+

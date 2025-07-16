@@ -1,0 +1,106 @@
+// -*- mode: jsonc -*-
+{
+  "layer": "top", // Waybar at top layer
+  "position": "top", // Waybar position
+  "height": 30, // Waybar height
+  "spacing": 5, // Gaps between modules
+
+  // Modules order
+  "modules-left": ["custom/launcher", "hyprland/workspaces"],
+  "modules-center": ["clock"],
+  "modules-right": [
+    "network",
+    "cpu",
+    "memory",
+    "battery",
+    "pulseaudio",
+    "custom/power"
+  ],
+ 
+  // Modules configuration
+  // Left
+  "custom/launcher": {
+    "format": "  ",
+    "tooltip": false
+  },
+
+  "hyprland/workspaces": {
+    "format": "{name}{icon}",
+    "active-only": false,
+    "all-outputs": true,
+    "persistent-workspaces": {
+      "eDP-1": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    },
+    "format-icons": {
+      "active": ":  ",
+      "empty": "",
+      "persistent": ":  "
+    }
+  },
+
+  // Center
+  "clock": {
+    "format": "󰅐  {:%a %b %e %H:%M}",
+    "tooltip-format": "<big>{:%A, %B %d, %Y}</big>\n<tt><small>{calendar}</small></tt>"
+  },
+
+  // Right
+  "network": {
+    "format-wifi": "<span size='13000'>  </span>{essid}",
+    "format-ethernet": "<span size='13000'>󰤭  </span> Disconnected",
+    "format-linked": "{ifname} (No IP) ",
+    "format-disconnected": "<span size='13000'>  </span>Disconnected",
+    "tooltip-format-wifi": "Signal Strenght: {signalStrength}%",
+    "format-alt": "{ifname}: {ipaddr}/{cidr}"
+  },
+  "pulseaudio": {
+    // "scroll-step": 1, // %, can be a float
+    "format": "{icon}  {volume}%",
+    "format-muted": "  ",
+    "format-bluetooth": "{icon}  {volume}%",
+    "format-bluetooth-muted": "  ",
+    "format-source": " {volume}%",
+    "format-source-muted": " ",
+    "format-icons": {
+      "headphone": " ",
+      "hands-free": " ",
+      "headset": " ",
+      "default": ["", "", ""]
+    },
+    "on-click": "pavucontrol"
+  },
+  "cpu": {
+    "format": "<span size='13000'> </span> {usage}%",
+    "tooltip": false
+  },
+  "memory": {
+    "format": "<span size='13000'> </span> {}% "
+  },
+  "battery": {
+    "states": {
+      "warning": 30,
+      "critical": 15
+    },
+    "format": "<span size='13000'>{icon} </span> {capacity}%",
+    "format-warning": "<span size='13000'>{icon} </span> {capacity}%",
+    "format-critical": "<span size='13000'>{icon} </span> {capacity}%",
+    "format-charging": "<span size='13000'> </span>{capacity}%",
+    "format-plugged": "<span size='13000'> </span>{capacity}%",
+    "format-alt": "<span size='13000'>{icon} </span> {time}",
+    "format-icons": [" ", " ", " ", " ", " "],
+    "tooltip-format": "{time}"
+  },
+
+  "custom/power": {
+    "format" : " ⏻  ",
+    "tooltip": false,
+    "menu": "on-click",
+    "menu-file": "$HOME/.config/waybar/modules/power_menu.xml", // Menu file in resources folder
+    "menu-actions": {
+      "shutdown": "shutdown",
+      "reboot": "reboot",
+      "suspend": "systemctl suspend",
+      "hibernate": "systemctl hibernate"
+    }
+  }
+}
