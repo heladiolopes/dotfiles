@@ -8,9 +8,6 @@ fi
 # If you come from bash you might have to change your $PATH.
 export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
 
-# # Home Brew Init
-# eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-
 # Set Neovim as default editor
 export EDITOR='vim'
 
@@ -34,7 +31,6 @@ zinit snippet OMZP::git
 zinit snippet OMZP::aliases
 zinit snippet OMZP::docker
 zinit snippet OMZP::docker-compose
-zinit snippet OMZP::colorize
 
 # Load completions
 autoload -Uz compinit && compinit
@@ -78,7 +74,7 @@ alias l='ls -CF'
 alias c='clear'
 alias cl='clear'
 alias vim='nvim'
-alias cat='ccat'
+alias cat='bat'
 alias ..="cd .."
 alias ...="cd ../.."
 alias ....="cd ../../.."

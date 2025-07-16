@@ -81,7 +81,7 @@ fill_with_dots() {
 }
 
 PROMPT_COMMAND='
-    context="$GREEN$(whoami)@$(hostname)$RESET"
+    context="$GREEN$(whoami)@$(uname -n)$RESET"
     workdir="$BLUE$(get_cwd)$RESET"
     branch="$(get_git_branch)"
 
