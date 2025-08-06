@@ -3,130 +3,185 @@
 * {
   font-family: JetBrainsMonoNerdFont, FontAwesome, Roboto, Helvetica, Arial, sans-serif;
   font-size: 14px;
-  min-height: 0;
   font-weight: bold;
+  min-height: 0;
 }
 
+/* WINDOW */
 window#waybar {
-  background: transparent;
-  background-color: @base;
-  color: @white;
-  transition-property: background-color;
-  transition-duration: 0.1s;
-  border-bottom: 2px solid @white;
+  background-color: @bg_main;
+  color: @fg_primary;
+  border: 2px solid @bg_overlay;
+  border-radius: 5;
+  transition: background-color 0.2s, border-color 0.2s;
 }
 
-#window {
-  margin: 0 4px;
-}
-
+/* BUTTON */
 button {
-  /* Use box-shadow instead of border so the text isn't offset */
-  box-shadow: inset 0 -3px transparent;
-  /* Avoid rounded borders under each button name */
-  border: none;
-  border-radius: 0;
+  background: transparent;
+  color: @fg_primary;
+  padding: 0 10px;
+  box-shadow: inset 0 -2px transparent;
+  transition: background-color 0.2s, box-shadow 0.2s;
 }
 
 button:hover {
-  background: inherit;
-  box-shadow: inset 0 -3px #ffffff;
+  background-color: @bg_overlay;
+  box-shadow: inset 0 -2px @accent_blue;
 }
 
-/* LAUNCHER LOGO */
-#custom-launcher {
-  color: @white;
-  font-size: 16px;
+button:active {
+  background-color: @accent_blue;
+  color: @bg_main;
+  box-shadow: inset 0 -2px @fg_primary;
 }
 
 /* WORKSPACES */
 #workspaces {
-  margin: 0 5px;
+  margin: 0 10px;
 }
 
 #workspaces button {
   padding: 0 5px;
-  color: #ffffff;
+  margin: 5px;
+  border-radius: 20px;
+  border: 2px solid @fg_primary;
+  transition: background-color 0.2s, color 0.2s;
 }
 
-#workspaces button.focused {
-  background-color: rgba(0, 0, 0, 0.3);
-  color: @white;
-  border-top: 2px solid @white;
+#workspaces button:hover {
+  background-color: @bg_overlay;
+  color: @fg_primary;
 }
 
-#workspaces button.active{
-  background-color: rgba(0, 0, 0, 0.3);
-  color: @base;
-  background: @white;
-  border-top: 2px solid @base;
+#workspaces button.active {
+  background-color: @fg_primary;
+  border: 2px solid @fg_primary;
+  color: @bg_main;
 }
 
 #workspaces button.urgent {
-  background-color: @red;
+  background-color: @accent_red;
 }
 
-/* If workspaces is the leftmost module, omit left margin */
-.modules-left > widget:first-child > #workspaces {
-  margin-left: 0;
+#workspaces button.empty {
+  color: @fg_disabled;
+  border: 2px solid @bg_overlay;
 }
 
-/* If workspaces is the rightmost module, omit right margin */
-.modules-right > widget:last-child > #workspaces {
-  margin-right: 0;
+/* SEPARATOR */
+#custom-sep {
+  font-size: 16px;
 }
 
+/* DEFAULT RAW */
+#custom-power,
+#custom-launcher,
+#custom-notification,
+#idle_inhibitor {
+  color: @fg_primary;
+  font-size: 16px;
+  padding: 0 14px 0 10px;
+  margin: 5px 0;
+  border-radius: 20px;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+/* POWER */
+#custom-power:hover {
+  background-color: @accent_red;
+  color: @bg_main;
+}
+
+/* LAUNCHER LOGO */
+#custom-launcher:hover {
+  background-color: @accent_blue;
+  color: @bg_main;
+}
+
+/* IDLE INHIBITOR */
+#idle_inhibitor.activated {
+  color: @accent_green;
+}
+
+#idle_inhibitor:hover {
+  background-color: @accent_green;
+  color: @bg_main;
+}
+
+/* CUSTOM NOTIFICATION */
+#custom-notification:hover {
+  background-color: @accent_blue;
+  color: @bg_main;
+}
+
+#custom-notification.notification,
+#custom-notification.dnd-notification,
+#custom-notification.inhibited-notification,
+#custom-notification.dnd-inhibited-notification {
+  background-color: @accent_blue;
+  color: @fg_primary;
+}
+
+/* DEFAULT BUTTON */
 #clock,
+#bluetooth,
 #network,
 #cpu,
 #memory,
-#battery,
-#pulseaudio {
-  padding: 0 10px;
-  color: @white;
-  border-bottom: 2px solid @white;
+#pulseaudio,
+#battery {
+  background-color: @bg_surface;
+  color: @fg_primary;
+  padding: 0 12px;
+  border-radius: 20px;
+  transition: background-color 0.2s, color 0.2s;
+  margin: 5px 0;
 }
 
 /* CLOCK */
-#clock {
-  background-color: @overlay;
+#clock:hover {
+  background-color: @bg_overlay;
+  color: @accent_blue;
 }
 
 /* NETWORK */
-#network {
-  background-color: @blue;
+#network:hover {
+  background-color: @bg_overlay;
+  color: @accent_blue;
 }
 
 #network.disconnected {
-  background-color: @red;
+  color: @accent_red;
 }
 
 /* CPU */
-#cpu {
-  background-color: @green;
-  color: @base;
+#cpu:hover {
+  background-color: @bg_overlay;
+  color: @accent_blue;
 }
 
 /* MEMORY */
-#memory {
-  background-color: @purple;
+#memory:hover {
+  background-color: @bg_overlay;
+  color: @accent_blue;
 }
 
 /* BATTERY */
-#battery {
-  background-color: @white;
-  color: @base;
+#battery:hover {
+  background-color: @bg_overlay;
+  color: @accent_blue;
 }
 
-#battery.charging, #battery.plugged {
-  color: @white;
-  background-color: @green;
+#battery.charging,
+#battery.plugged {
+  background-color: @accent_green;
+  color: @bg_main;
 }
 
-/* Using steps() instead of linear as a timing function to limit cpu usage */
 #battery.critical:not(.charging) {
-  background-color: @red;
-  color: @white;
+  background-color: @accent_red;
+  color: @fg_primary;
   animation-name: blink;
   animation-duration: 0.5s;
   animation-timing-function: steps(12);
@@ -134,27 +189,21 @@ button:hover {
   animation-direction: alternate;
 }
 
-/* @keyframes blink { */
-/* to { */
-/*   background-color: #ffffff; */
-/*   color: #000000; */
-/* } */
-/* } */
-/**/
-/* label:focus { */
-/*   background-color: #000000; */
-/* } */
-
-#pulseaudio {
-  background-color: @yellow;
-  color: @base;
+@keyframes blink {
+  to {
+    background-color: @blink_bg;
+    color: @blink_fg;
+  }
 }
 
+/* PULSEAUDIO */
 #pulseaudio:hover {
-  background-color: @brightyellow;
+  background-color: @bg_overlay;
+  color: @accent_blue;
 }
 
 #pulseaudio.muted {
-  background-color: @overlay;
-  color: @base;
+  background-color: @muted_bg;
+  color: @fg_disabled;
 }
+

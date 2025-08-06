@@ -1,20 +1,24 @@
-@define-color base         #0f111a;
-@define-color surface0     #2e3c43;
-@define-color red          #ff1744;
-@define-color green        #00e676;
-@define-color yellow       #ffd600;
-@define-color blue         #2979ff;
-@define-color purple       #d500f9;
-@define-color cyan         #00e5ff;
-@define-color white        #e0e0e0;
-@define-color brightred    #ff5252;
-@define-color brightgreen  #69f0ae;
-@define-color brightyellow #ffff00;
-@define-color brightblue   #448aff;
-@define-color brightpurple #e040fb;
-@define-color brightcyan   #18ffff;
-@define-color text         #e0e0e0;
-@define-color subtext      #b0bec5;
-@define-color overlay      #78909c;
-@define-color crust        #000000;
+/* Backgrounds */
+@define-color bg_main        #0f111a;
+@define-color bg_surface     #1c242e;
+@define-color bg_overlay     #2f3c4a;
+
+/* Texto */
+@define-color fg_primary     #e0e0e0;   /* branco sujo, principal */
+@define-color fg_secondary   #a0aab7;   /* subtexto */
+@define-color fg_disabled    #6c7a89;   /* desabilitado/inativo */
+
+/* Acentos */
+@define-color accent_blue    #4da6ff;   /* principal (ex: network, clock) */
+@define-color accent_green   #7dd87d;   /* status ok (ex: CPU, charging) */
+@define-color accent_grey    #cfd8dc;   /* neutro usado em alternância */
+
+/* Alertas (usados minimamente) */
+@define-color accent_red     #ff5c5c;   /* crítico/urgente (ex: bateria baixa) */
+@define-color accent_yellow  #ffdd57;   /* aviso (ex: volume alto) */
+
+/* Utilitários */
+@define-color muted_bg       #3a4753;   /* fundo para estado "muted" */
+@define-color blink_fg       #0e141b;
+@define-color blink_bg       #e0e0e0;
 
