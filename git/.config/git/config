@@ -1,5 +1,5 @@
 [include]
-	path = ~/.config/git/creds.config
+  path = ~/.config/git/creds.config
 
 [user]
   name = Heladio Lopes
@@ -9,7 +9,7 @@
   template = ~/.config/git/template
 
 [core]
-	compression = 9
+  compression = 9
   editor = nvim
   ignorecase = true
   autocrlf = input
@@ -26,7 +26,7 @@
   interHunkContext = 10  # merge near hunks in diffs
 
 [init]
-	defaultBranch = develop
+  defaultBranch = develop
 
 [log]
   abbrevCommit = true  # short commits
@@ -69,21 +69,21 @@
   sort = -committerdate
 
 [tag]
-   sort = -taggerdate
+  sort = -taggerdate
 
 # Aliases
 [alias]
-	d = diff
-	cm = commit -sm
-	st = status -su
-	lg1 = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(auto)%d%C(reset)' --all
-	lg2 = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(auto)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)'
-	lg = !"git lg1"
+  d = diff
+  cm = commit -sm
+  st = status -su
+  lg1 = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(auto)%d%C(reset)' --all
+  lg2 = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(auto)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)'
+  lg = !"git lg1"
 
 # Colors
 [color]
-	status = auto
-	interactive = auto
+  status = auto
+  interactive = auto
   ui = auto
 
 [color "branch"]
@@ -116,7 +116,10 @@
 
 # URL shortcuts
 [url "git@github.com:"]
-    insteadOf = "gh:"
+  insteadOf = "gh:"
+
+[url "git@gitea.home.lab:"]
+  insteadOf = "gt:"
 
 [url "git@github.com:heladiolopes/"]
-    insteadOf = "hsl:"
+  insteadOf = "hsl:"
