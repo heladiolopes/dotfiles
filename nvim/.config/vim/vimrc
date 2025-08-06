@@ -1,0 +1,57 @@
+" ========== General ==========
+set nocompatible              " Não usar modo compatível com vi
+filetype plugin indent on     " Detectar tipo de arquivo
+syntax on                     " Ativar syntax highlight
+set encoding=utf-8
+set hidden                    " Permitir buffers em background
+set number                    " Exibir número de linhas
+set relativenumber            " Linhas relativas
+set nowrap                    " Não quebrar linhas
+set mouse=a                   " Habilitar mouse
+set clipboard=unnamedplus     " Usar clipboard do sistema
+set title                     " Mostrar nome do arquivo no título da janela
+
+" ========== Indentação ==========
+set expandtab                 " Usar espaços ao invés de tabs
+set tabstop=4                 " 1 tab = 4 espaços
+set shiftwidth=4              " Recuo automático = 4 espaços
+set smartindent               " Indentação automática inteligente
+set autoindent
+
+" ========== Pesquisa ==========
+set ignorecase                " Ignorar case por padrão
+set smartcase                 " ...exceto se tiver letras maiúsculas
+set incsearch                 " Mostrar resultado da busca enquanto digita
+set hlsearch                  " Destacar todas as ocorrências
+
+" ========== Interface ==========
+set ruler                     " Mostrar posição do cursor
+set showcmd                   " Mostrar comandos parciais
+set wildmenu                  " Menu de completação
+set wildmode=longest:full,full
+
+" ========== Histórico ==========
+set undofile
+set history=1000
+
+" Armazenar viminfo e netrw no XDG
+if exists('$XDG_STATE_HOME')
+    let &viminfofile = $XDG_STATE_HOME . '/vim/viminfo'
+    let g:netrw_home = $XDG_STATE_HOME . '/vim'
+endif
+
+" ========== Mapas ==========
+nnoremap <Space> :
+nnoremap <C-s> :w<CR>
+nnoremap <C-q> :q<CR>
+
+" ========== Netrw ==========
+let g:netrw_banner = 0
+let g:netrw_liststyle = 3
+let g:netrw_browse_split = 0
+let g:netrw_altv = 1
+
+" ========== Arquivos recentes ==========
+if has('nvim')
+    set viminfo+=n~/.local/state/vim/viminfo
+endif

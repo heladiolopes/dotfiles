@@ -38,7 +38,12 @@ return {
   {
     "lukas-reineke/indent-blankline.nvim",
     main = "ibl",
-    opts = {},
+    opts = {
+      indent = { char = "┊" },
+      scope = {
+        highlight = { "Function", "Label" },
+      },
+    },
   },
   {
     "NMAC427/guess-indent.nvim",

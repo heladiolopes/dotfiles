@@ -13,15 +13,15 @@ return {
       end,
     },
     { "nvim-telescope/telescope-ui-select.nvim" },
-    { "nvim-tree/nvim-web-devicons", enabled = vim.g.have_nerd_font },
+    { "nvim-tree/nvim-web-devicons",            enabled = vim.g.have_nerd_font },
   },
 
   config = function()
     -- Telescope Configuration
     require("telescope").setup({
       defaults = {
-        prompt_prefix = ">> ",
-        selection_caret = "-> ",
+        prompt_prefix = " ",
+        selection_caret = "➜ ",
         winblend = 10,
         sorting_strategy = "ascending",
         layout_strategy = "horizontal",
@@ -50,20 +50,20 @@ return {
       builtin.find_files({
         hidden = true,
         file_ignore_patterns = {
-          "%.git/",     -- ignores everything inside .git
+          "%.git/", -- ignores everything inside .git
         },
       })
     end
 
-    vim.keymap.set("n", "<leader>ff", find_files,          { desc = "Find Files"   })
-    vim.keymap.set("n", "<leader>fk", builtin.keymaps,     { desc = "Find Keymaps" })
-    vim.keymap.set("n", "<leader>fg", builtin.live_grep,   { desc = "Find Grep"    })
-    vim.keymap.set("n", "<leader>fr", builtin.oldfiles,    { desc = "Find Recent"  })
-    vim.keymap.set("n", "<leader>fb", builtin.buffers,     { desc = "Find Buffers" })
-    vim.keymap.set("n", "<leader>fh", builtin.help_tags,   { desc = "Find Help"    })
-    vim.keymap.set("n", "<leader>ft", builtin.colorscheme, { desc = "Find Themes"  })
+    vim.keymap.set("n", "<leader>ff", find_files, { desc = "Find Files" })
+    vim.keymap.set("n", "<leader>fk", builtin.keymaps, { desc = "Find Keymaps" })
+    vim.keymap.set("n", "<leader>fg", builtin.live_grep, { desc = "Find Grep" })
+    vim.keymap.set("n", "<leader>fr", builtin.oldfiles, { desc = "Find Recent" })
+    vim.keymap.set("n", "<leader>fb", builtin.buffers, { desc = "Find Buffers" })
+    vim.keymap.set("n", "<leader>fh", builtin.help_tags, { desc = "Find Help" })
+    vim.keymap.set("n", "<leader>ft", builtin.colorscheme, { desc = "Find Themes" })
 
-    vim.keymap.set("n", "<leader>gs", builtin.git_status,  { desc = "Git Status"   })
+    vim.keymap.set("n", "<leader>gs", builtin.git_status, { desc = "Git Status" })
     -- stylua: ignore end
   end,
 }

@@ -57,3 +57,6 @@ opt.inccommand = "split" -- Preview substitutions live, as you type!
 -- instead raise a dialog asking if you wish to save the current file(s)
 -- See `:help 'confirm'`
 opt.confirm = true
+
+-- set the default border for all floating windows
+opt.winborder = 'rounded'

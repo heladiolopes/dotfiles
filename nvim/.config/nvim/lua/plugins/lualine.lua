@@ -13,6 +13,7 @@ return {
         component_separators = { left = "", right = "" },
         section_separators = { left = "", right = "" },
       },
+
       sections = {
         lualine_a = { "mode" },
         lualine_b = { "branch", "diff", "diagnostics" },
@@ -22,6 +23,12 @@ return {
             cond = function()
               return vim.bo.buftype == ""
             end,
+            symbols = {
+              modified = "[+]",
+              readonly = "[-]",
+              unnamed = "[No Name]",
+              newfile = "[New]",
+            },
           },
         },
         lualine_x = { "encoding", "filetype" },
