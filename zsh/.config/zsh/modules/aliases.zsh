@@ -40,6 +40,7 @@ alias flushpip="pip cache purge"
 alias flushpyc="find . -type d -name '__pycache__' -exec rm -r {} + && find . -type f -name '*.pyc' -delete"
 alias flushgo="go clean -cache"
 alias flushprecommit="pre-commit clean"
+alias flushuv="uv cache clean"
 
 # Compression
 compress() { tar -czf "${1%/}.tar.gz" "${1%/}"; }
