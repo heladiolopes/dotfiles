@@ -31,6 +31,7 @@
     "memory",
     "pulseaudio",
     "battery",
+    // "power-profiles-daemon",
     "custom/notification"
   ],
   
@@ -234,6 +235,19 @@
     "format-connected": "",
     "tooltip-format": "Devices connected: {num_connections}",
     "on-click": "blueberry"
+  },
+
+  // Power Profile
+  "power-profiles-daemon": {
+    "format": "{icon}   {profile}",
+    "tooltip-format": "Power profile: {profile}\nDriver: {driver}",
+    "tooltip": true,
+    "format-icons": {
+      "default": "",
+      "performance": "",
+      "balanced": "",
+      "power-saver": ""
+    }
   },
 
 }

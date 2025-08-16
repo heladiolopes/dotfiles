@@ -1,6 +1,6 @@
 configuration{
   modi:                    "combi,window,drun,run,ssh";
-  icon-theme:              "Adwaita";
+  icon-theme:              "Papirus";
   show-icons:              true;
   terminal:                "kitty";
   location:                0;

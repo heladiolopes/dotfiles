@@ -25,40 +25,57 @@ get_python_env() {
     fi
 }
 
+# Fast prompt helper: single git call, parse branch/ahead/behind + staged/modified/untracked
 get_git_branch() {
-    local branch added_count mod_count untracked_count ahead behind
-    local added="" modified="" untracked="" sync=""
+    # Bail if not in a git repo
+    git rev-parse --is-inside-work-tree >/dev/null 2>&1 || return
 
-    branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null) || return
-
-    added_count=$(git diff --cached --name-only 2>/dev/null | wc -l)
-    mod_count=$(git diff --name-only 2>/dev/null | wc -l)
-    untracked_count=$(git ls-files --others --exclude-standard 2>/dev/null | wc -l)
-
-    [ "$added_count" -gt 0 ] && added="+$added_count"
-    [ "$mod_count" -gt 0 ] && modified="!$mod_count"
-    [ "$untracked_count" -gt 0 ] && untracked="?$untracked_count"
-
-    local GIT_COLOR=$YELLOW
-    if git rev-parse --abbrev-ref --symbolic-full-name @{u} >/dev/null 2>&1; then
-        read ahead behind < <(git rev-list --left-right --count HEAD...@{u} 2>/dev/null)
-
-        if [ "$ahead" -gt 0 ]; then
-            GIT_COLOR=$GREEN
-        fi
-
-        if [ "$behind" -gt 0 ]; then
-            GIT_COLOR+=$RED
-        fi
-
-        [ "$ahead" -gt 0 ] && sync+="⇡$ahead"
-        [ "$behind" -gt 0 ] && sync+="⇣$behind"
+    # One cheap call; add a tiny timeout to avoid lag on huge repos (optional)
+    local out
+    if command -v timeout >/dev/null 2>&1; then
+        out=$(timeout 0.15 git status --porcelain=1 -b 2>/dev/null) || return
+    else
+        out=$(git status --porcelain=1 -b 2>/dev/null) || return
     fi
 
-    local status="$sync $added $modified $untracked"
-    status=$(echo "$status" | xargs)
+    local branch="" ahead=0 behind=0 staged=0 modified=0 untracked=0
 
-    echo -ne " ($GIT_COLOR$branch${status:+ $status}$RESET)"
+    while IFS= read -r line; do
+        case "$line" in
+            "## "*)
+                # Example: "## main...origin/main [ahead 1, behind 2]"
+                branch=${line#\#\# }              # strip "## "
+                branch=${branch%%...*}            # keep local branch before "..."
+                [[ $line =~ ahead[[:space:]]+([0-9]+) ]]  && ahead=${BASH_REMATCH[1]}
+                [[ $line =~ behind[[:space:]]+([0-9]+) ]] && behind=${BASH_REMATCH[1]}
+                ;;
+            "?? "*)
+                ((untracked++))
+                ;;
+            *)
+                # Porcelain v1: two status chars (index, worktree)
+                [[ ${line:0:1} != " " ]] && ((staged++))
+                [[ ${line:1:1} != " " ]] && ((modified++))
+                ;;
+        esac
+    done <<< "$out"
+
+    # Build badges like your original
+    local added="" changed="" unk="" sync="" GIT_COLOR=$YELLOW
+    ((staged>0))     && added="+$staged"
+    ((modified>0))   && changed="!$modified"
+    ((untracked>0))  && unk="?$untracked"
+    ((ahead>0))      && sync+="⇡$ahead"
+    ((behind>0))     && sync+="⇣$behind"
+
+    # Color logic: green if ahead, add red if behind too
+    ((ahead>0))  && GIT_COLOR=$GREEN
+    ((behind>0)) && GIT_COLOR+=$RED
+
+    local status="$sync $added $changed $unk"
+    status=$(printf '%s\n' "$status" | xargs)   # trim
+
+    printf ' (%s%s%s%s)\n' "$GIT_COLOR" "$branch" "${status:+ $status}" "$RESET"
 }
 
 get_terraform_workspace() {
