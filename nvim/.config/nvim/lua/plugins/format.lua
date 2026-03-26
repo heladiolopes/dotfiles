@@ -30,7 +30,7 @@ return {
     end,
     formatters_by_ft = {
       lua = { "stylua" },
-      -- python = { "isort", "black" },
+      python = { "ruff_organize_imports", "ruff_format" },
       go = { "gofumpt", "goimports" },
       sh = { "shfmt" },
       -- sql_bigquery = { "bigquery_fmt" },

@@ -31,10 +31,10 @@
     "memory",
     "pulseaudio",
     "battery",
-    // "power-profiles-daemon",
+    "power-profiles-daemon",
     "custom/notification"
   ],
-  
+
   // Separator
   "custom/sep": {
     "format": "<span>⋮</span>",
@@ -239,15 +239,15 @@
 
   // Power Profile
   "power-profiles-daemon": {
-    "format": "{icon}   {profile}",
+    "format": "{icon} ",
     "tooltip-format": "Power profile: {profile}\nDriver: {driver}",
     "tooltip": true,
     "format-icons": {
       "default": "",
       "performance": "",
       "balanced": "",
-      "power-saver": ""
+      "power-saver": " "
     }
-  },
+  }
 
 }

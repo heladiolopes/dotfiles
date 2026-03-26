@@ -6,9 +6,8 @@ eval "$(zoxide init --cmd cd zsh)"
 
 # pyenv
 export PYENV_ROOT="${XDG_DATA_HOME:-$HOME/.local/share}/pyenv"
-command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init -)"
-eval "$(pyenv virtualenv-init -)"
+[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init - zsh)"
 
 # go
 export GOPATH="${XDG_DATA_HOME:-$HOME/.local/share}/go"

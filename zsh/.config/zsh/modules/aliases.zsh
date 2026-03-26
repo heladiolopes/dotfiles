@@ -50,3 +50,5 @@ alias decompress="tar -xzf"
 alias c="clear"
 alias cl="clear"
 
+# Cleanup
+alias wget='wget --hsts-file="$XDG_CACHE_HOME/wget-hsts"'

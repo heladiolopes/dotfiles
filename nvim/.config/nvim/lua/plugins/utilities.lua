@@ -55,4 +55,12 @@ return {
     -- Multi line editing
     "mg979/vim-visual-multi",
   },
+  {
+    "lukas-reineke/virt-column.nvim",
+    opts = {
+      char = "┊", -- the vertical line character
+      virtcolumn = "79,100", -- column(s)
+      highlight = "IblIndent",
+    },
+  }
 }

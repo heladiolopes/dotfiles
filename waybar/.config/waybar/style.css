@@ -129,6 +129,7 @@ button:active {
 #network,
 #cpu,
 #memory,
+#power-profile-daemon,
 #pulseaudio,
 #battery {
   background-color: @bg_surface;

@@ -5,6 +5,7 @@ vim.lsp.enable('gopls')
 vim.lsp.enable("rust_analyzer")
 vim.lsp.enable("bashls")
 vim.lsp.enable("marksman")
+vim.lsp.enable("pyright")
 
 -- Lsp capabilities
 local capabilities = vim.lsp.protocol.make_client_capabilities()
