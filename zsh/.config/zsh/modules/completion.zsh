@@ -13,6 +13,20 @@ zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 zstyle ':completion:*' menu no
 
+if (( ! $+functions[_loadenv] )); then
+  _loadenv() {
+    local -a env_files
+
+    env_files=(.env(N) *.env(N) .env.*(N))
+    env_files=(${(u)env_files})
+
+    _describe '.env file' env_files
+  }
+fi
+
+compdef _loadenv loadenv
+
 # fzf-tab preview
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls -A --color=always $realpath'
 zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls -A --color=always $realpath'
+zstyle ':fzf-tab:complete:loadenv:*' fzf-preview 'bat --style=numbers --color=always $realpath'
