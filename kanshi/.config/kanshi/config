@@ -6,4 +6,3 @@ profile Dock {
 profile Laptop {
   output eDP-1 enable
 }
-

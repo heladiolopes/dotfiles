@@ -1,3 +1,13 @@
+-- local function load_local_neotree_config()
+--   local path = vim.fn.getcwd() .. '/.neotree.lua'
+--   if vim.fn.filereadable(path) == 1 then
+--     return dofile(path)
+--   end
+--   return {}
+-- end
+--
+-- local local_cfg = load_local_neotree_config()
+--
 return {
   "nvim-neo-tree/neo-tree.nvim",
   branch = "v3.x",
@@ -15,7 +25,10 @@ return {
         hijack_netrw_behavior = "open_default",
         filtered_items = {
           hide_dotfiles = false,
-          hide_gitignored = false,
+          hide_gitignored = true,
+          hide_by_name = {
+            ".git",
+          },
         },
       },
       buffers = {
@@ -41,8 +54,10 @@ return {
 
     -- Keymaps
     -- stylua: ignore start
-    vim.keymap.set("n", "<leader>et",  "<cmd>Neotree toggle<CR>",                 { desc = "Neotree: [E]xplorer [T]oggle",      silent = true })
-    vim.keymap.set("n", "<leader>er",  "<cmd>Neotree filesystem reveal left<CR>", { desc = "Neotree: [E]xplorer [R]eveal File", silent = true })
+    vim.keymap.set("n", "<leader>et", "<cmd>Neotree toggle<CR>",
+      { desc = "Neotree: [E]xplorer [T]oggle", silent = true })
+    vim.keymap.set("n", "<leader>er", "<cmd>Neotree filesystem reveal left<CR>",
+      { desc = "Neotree: [E]xplorer [R]eveal File", silent = true })
     -- stylua: ignore end
   end,
 }

@@ -20,4 +20,3 @@ zinit snippet OMZP::docker
 zinit snippet OMZP::docker-compose
 
 zinit cdreplay -q
-

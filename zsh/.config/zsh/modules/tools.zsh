@@ -13,4 +13,3 @@ eval "$(pyenv init - zsh)"
 export GOPATH="${XDG_DATA_HOME:-$HOME/.local/share}/go"
 export PATH="$GOPATH/bin:$PATH"
 export PATH=$PATH:/usr/local/go/bin
-

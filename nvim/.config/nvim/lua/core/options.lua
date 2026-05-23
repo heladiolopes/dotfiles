@@ -52,6 +52,8 @@ opt.breakindent = true   -- Enable break indent
 opt.list = true          -- Sets how neovim will display certain whitespace characters in the editor.
 opt.listchars = { tab = "  ", trail = "·", nbsp = "␣" }
 opt.inccommand = "split" -- Preview substitutions live, as you type!
+opt.endofline = true     -- Write a final newline at the end of the file.
+opt.fixeol = true        -- Preserve a single final newline when saving files.
 
 -- if performing an operation that would fail due to unsaved changes in the buffer (like `:q`),
 -- instead raise a dialog asking if you wish to save the current file(s)

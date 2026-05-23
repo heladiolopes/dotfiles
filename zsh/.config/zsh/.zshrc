@@ -15,4 +15,4 @@ source $ZDOTDIR/modules/bindings.zsh
 source $ZDOTDIR/modules/aliases.zsh
 source $ZDOTDIR/modules/tools.zsh
 source $ZDOTDIR/modules/options.zsh
-
+source $ZDOTDIR/modules/functions.zsh

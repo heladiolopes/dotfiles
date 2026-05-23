@@ -49,6 +49,7 @@ alias decompress="tar -xzf"
 # Others
 alias c="clear"
 alias cl="clear"
+alias zsource="source $HOME/.config/zsh"
 
 # Cleanup
 alias wget='wget --hsts-file="$XDG_CACHE_HOME/wget-hsts"'

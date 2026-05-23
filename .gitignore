@@ -9,3 +9,8 @@ bin/.local/bin/*
 # Cache
 .mypy_cache/
 
+# Codex
+.codex
+
+# Cache and logs
+.nvimlog

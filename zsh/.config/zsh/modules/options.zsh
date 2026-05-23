@@ -3,4 +3,3 @@ setopt autocd
 
 # Deactivate noise
 setopt no_beep
-
