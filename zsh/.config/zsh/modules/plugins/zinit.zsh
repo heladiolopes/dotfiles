@@ -1,7 +1,9 @@
 # Set-up Zinit Plugin Manager
 typeset -g ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
-[ ! -d $ZINIT_HOME ] && mkdir -p "$(dirname $ZINIT_HOME)"
-[ ! -d $ZINIT_HOME/.git ] && git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
+if [[ ! -r "$ZINIT_HOME/zinit.zsh" ]]; then
+  print -u2 "zinit is not provisioned; run bootstrap.sh apply when networking is available"
+  return 0
+fi
 source "${ZINIT_HOME}/zinit.zsh"
 
 # Add in Powerlevel10k
