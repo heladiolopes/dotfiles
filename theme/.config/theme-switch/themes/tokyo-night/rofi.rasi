@@ -1,0 +1,12 @@
+@import "~/.config/rofi/theme.rasi"
+
+* {
+  bg0: #1A1B26F2;
+  bg1: #292E42;
+  bg2: #24283BCC;
+  bg3: #7AA2F7F2;
+  fg0: #C0CAF5;
+  fg1: #FFFFFF;
+  fg2: #A9B1D6;
+  fg3: #565F89;
+}

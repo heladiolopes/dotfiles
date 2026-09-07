@@ -5,12 +5,20 @@ git/.config/git/creds.config
 bin/.local/bin/*
 !bin/.local/bin/
 !bin/.local/bin/.gitkeep
+!bin/.local/bin/theme-switch
 
 # Cache
 .mypy_cache/
 
 # Codex
 .codex
+.agents
 
 # Cache and logs
 .nvimlog
+nvim.log
+*/.config/*/current-theme.*
+nvim/.config/nvim/lua/current-theme.lua
+btop/.config/btop/themes/current.theme
+hypr/.config/hypr/current-wallpaper
+tmux/.config/tmux/themes/current.conf

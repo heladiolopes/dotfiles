@@ -1,0 +1,14 @@
+@define-color bg_main        #0f111a;
+@define-color bg_surface     #1c242e;
+@define-color bg_overlay     #2f3c4a;
+@define-color fg_primary     #e0e0e0;
+@define-color fg_secondary   #a0aab7;
+@define-color fg_disabled    #6c7a89;
+@define-color accent_blue    #4da6ff;
+@define-color accent_green   #7dd87d;
+@define-color accent_grey    #cfd8dc;
+@define-color accent_red     #ff5c5c;
+@define-color accent_yellow  #ffdd57;
+@define-color muted_bg       #3a4753;
+@define-color blink_fg       #0e141b;
+@define-color blink_bg       #e0e0e0;

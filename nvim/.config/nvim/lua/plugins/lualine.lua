@@ -1,3 +1,5 @@
+local theme = require("core.theme")
+
 return {
   "nvim-lualine/lualine.nvim",
   dependencies = {
@@ -9,7 +11,7 @@ return {
       options = {
         globalstatus = true,
         icons_enabled = true,
-        theme = "material",
+        theme = theme.lualine,
         component_separators = { left = "", right = "" },
         section_separators = { left = "", right = "" },
       },

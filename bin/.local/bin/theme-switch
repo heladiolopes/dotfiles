@@ -1,0 +1,174 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+config_home="${XDG_CONFIG_HOME:-$HOME/.config}"
+state_home="${XDG_STATE_HOME:-$HOME/.local/state}"
+theme_root="$config_home/theme-switch/themes"
+state_dir="$state_home/theme-switch"
+state_file="$state_dir/current"
+default_theme="deep-ocean"
+
+die() {
+    printf 'theme-switch: %s\n' "$*" >&2
+    exit 1
+}
+
+available_themes() {
+    [[ -d "$theme_root" ]] || return 0
+    find -L "$theme_root" -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | sort
+}
+
+current_theme() {
+    local selected="$default_theme"
+    if [[ -r "$state_file" ]]; then
+        IFS= read -r selected < "$state_file"
+    fi
+    printf '%s\n' "${selected:-$default_theme}"
+}
+
+metadata_value() {
+    local key="$1"
+    local metadata="$2"
+    sed -n "s/^${key}=//p" "$metadata" | head -n 1
+}
+
+install_link() {
+    local source="$1"
+    local target="$2"
+    local temporary
+
+    [[ -f "$source" ]] || die "missing theme asset: $source"
+    mkdir -p "${target%/*}"
+
+    if [[ -e "$target" && ! -L "$target" ]]; then
+        die "refusing to replace non-symlink: $target"
+    fi
+
+    temporary="${target}.tmp.$$"
+    ln -s "$source" "$temporary"
+    mv -Tf "$temporary" "$target"
+}
+
+persist_theme() {
+    local selected="$1"
+    local temporary
+
+    mkdir -p "$state_dir"
+    temporary="${state_file}.tmp.$$"
+    printf '%s\n' "$selected" > "$temporary"
+    mv -f "$temporary" "$state_file"
+}
+
+reload_apps() {
+    local wallpaper="$1"
+    local active_border="$2"
+    local inactive_border="$3"
+    local color_scheme="$4"
+
+    [[ "${THEME_SWITCH_NO_RELOAD:-0}" == "1" ]] && return
+
+    if command -v hyprctl >/dev/null 2>&1 && [[ -n "${HYPRLAND_INSTANCE_SIGNATURE:-}" ]]; then
+        hyprctl keyword general:col.active_border "rgba($active_border)" >/dev/null 2>&1 || true
+        hyprctl keyword general:col.inactive_border "rgba($inactive_border)" >/dev/null 2>&1 || true
+        hyprctl hyprpaper preload "$wallpaper" >/dev/null 2>&1 || true
+        hyprctl hyprpaper wallpaper ",$wallpaper,cover" >/dev/null 2>&1 || true
+    fi
+
+    if command -v gsettings >/dev/null 2>&1 && [[ -n "${DBUS_SESSION_BUS_ADDRESS:-}" ]]; then
+        gsettings set org.gnome.desktop.interface color-scheme "$color_scheme" >/dev/null 2>&1 || true
+    fi
+
+    command -v pkill >/dev/null 2>&1 && pkill -USR1 -x kitty >/dev/null 2>&1 || true
+    command -v pkill >/dev/null 2>&1 && pkill -USR2 -x waybar >/dev/null 2>&1 || true
+
+    if command -v swayosd-client >/dev/null 2>&1; then
+        swayosd-client --reload >/dev/null 2>&1 || true
+    fi
+
+    if command -v tmux >/dev/null 2>&1 && tmux list-sessions >/dev/null 2>&1; then
+        tmux source-file "$config_home/tmux/tmux.conf" >/dev/null 2>&1 || true
+    fi
+}
+
+apply_theme() {
+    local selected="$1"
+    local theme_dir="$theme_root/$selected"
+    local metadata="$theme_dir/theme.conf"
+    local wallpaper_name wallpaper active_border inactive_border color_scheme
+
+    [[ "$selected" =~ ^[a-z0-9][a-z0-9-]*$ ]] || die "invalid theme name: $selected"
+    [[ -d "$theme_dir" ]] || die "unknown theme: $selected"
+    [[ -r "$metadata" ]] || die "missing metadata: $metadata"
+
+    wallpaper_name="$(metadata_value wallpaper "$metadata")"
+    active_border="$(metadata_value hypr_active_border "$metadata")"
+    inactive_border="$(metadata_value hypr_inactive_border "$metadata")"
+    color_scheme="$(metadata_value color_scheme "$metadata")"
+    wallpaper="$config_home/backgrounds/$wallpaper_name"
+
+    [[ -f "$wallpaper" ]] || die "wallpaper not found: $wallpaper"
+    [[ "$active_border" =~ ^[[:xdigit:]]{8}$ ]] || die "invalid active border color in $metadata"
+    [[ "$inactive_border" =~ ^[[:xdigit:]]{8}$ ]] || die "invalid inactive border color in $metadata"
+    case "$color_scheme" in
+        default|prefer-dark|prefer-light) ;;
+        *) die "invalid desktop color scheme in $metadata" ;;
+    esac
+
+    install_link "$theme_dir/kitty.conf" "$config_home/kitty/current-theme.conf"
+    install_link "$theme_dir/waybar.css" "$config_home/waybar/current-theme.css"
+    install_link "$theme_dir/rofi.rasi" "$config_home/rofi/current-theme.rasi"
+    install_link "$theme_dir/swayosd.css" "$config_home/swayosd/current-theme.css"
+    install_link "$theme_dir/wlogout.css" "$config_home/wlogout/current-theme.css"
+    install_link "$theme_dir/btop.theme" "$config_home/btop/themes/current.theme"
+    install_link "$theme_dir/tmux.conf" "$config_home/tmux/themes/current.conf"
+    install_link "$theme_dir/nvim.lua" "$config_home/nvim/lua/current-theme.lua"
+    install_link "$wallpaper" "$config_home/hypr/current-wallpaper"
+
+    persist_theme "$selected"
+    reload_apps "$wallpaper" "$active_border" "$inactive_border" "$color_scheme"
+
+    if command -v notify-send >/dev/null 2>&1 && [[ -n "${DBUS_SESSION_BUS_ADDRESS:-}" ]]; then
+        notify-send -a theme-switch "Theme changed" "$selected" >/dev/null 2>&1 || true
+    fi
+    printf 'Applied theme: %s\n' "$selected"
+}
+
+usage() {
+    cat <<'EOF'
+Usage: theme-switch [THEME]
+       theme-switch --apply
+       theme-switch --current
+       theme-switch --list
+
+With no argument, choose a theme using Rofi.
+EOF
+}
+
+case "${1:-}" in
+    --apply)
+        apply_theme "$(current_theme)"
+        ;;
+    --current)
+        current_theme
+        ;;
+    --list)
+        available_themes
+        ;;
+    --help|-h)
+        usage
+        ;;
+    "")
+        command -v rofi >/dev/null 2>&1 || die "Rofi is required for interactive selection; pass a theme name instead"
+        selected="$(available_themes | rofi -dmenu -i -p Theme)" || exit 0
+        [[ -n "$selected" ]] || exit 0
+        apply_theme "$selected"
+        ;;
+    --*)
+        die "unknown option: $1"
+        ;;
+    *)
+        [[ $# -eq 1 ]] || die "expected one theme name"
+        apply_theme "$1"
+        ;;
+esac

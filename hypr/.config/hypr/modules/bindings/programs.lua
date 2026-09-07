@@ -27,3 +27,6 @@ hl.bind("PRINT", hl.dsp.exec_cmd("hyprshot -m output -m active"))
 hl.bind("SHIFT + PRINT", hl.dsp.exec_cmd("hyprshot -m output -m active --clipboard-only"))
 hl.bind(mainMod .. " + PRINT", hl.dsp.exec_cmd("hyprshot -m region"))
 hl.bind(mainMod .. " + SHIFT + PRINT", hl.dsp.exec_cmd("hyprshot -m region --clipboard-only"))
+
+-- Theme selector.
+hl.bind(mainMod .. " + SHIFT + T", hl.dsp.exec_cmd("~/.local/bin/theme-switch"))

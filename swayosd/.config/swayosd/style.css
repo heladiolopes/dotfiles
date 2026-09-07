@@ -1,8 +1,4 @@
-@define-color background-color  #0f111a;
-@define-color border-color      #e0e0e0;
-@define-color label             #e0e0e0;
-@define-color image             #e0e0e0;
-@define-color progress          #e0e0e0;
+@import "current-theme.css";
 
 window {
   border-radius: 50px;

@@ -16,5 +16,4 @@ configuration{
   window-format:           "{w} · {c} · {t}";
 }
 
-@theme "~/.config/rofi/theme.rasi"
-
+@theme "~/.config/rofi/current-theme.rasi"

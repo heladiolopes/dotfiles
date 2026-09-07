@@ -3,20 +3,20 @@
 
 -- Ignore maximize requests from apps.
 hl.window_rule({
-    match = { class = ".*" },
-    suppress_event = "maximize",
+  match = { class = ".*" },
+  suppress_event = "maximize",
 })
 
 -- Float and center settings and previews.
 local settings_class = "^(blueberry.py|Impala|Btop|org.gnome.NautilusPreviewer)$"
 hl.window_rule({ match = { class = settings_class }, float = true })
 hl.window_rule({ match = { class = settings_class }, center = true })
-hl.window_rule({ match = { class = settings_class }, size = { 1000, 800 } })
+hl.window_rule({ match = { class = settings_class }, size = { 1100, 900 } })
 
 -- Float and center file pickers.
 local file_picker_match = {
-    class = "xdg-desktop-portal-gtk",
-    title = "^(Open.*Files?|Save.*Files?|All Files|Save)",
+  class = "xdg-desktop-portal-gtk",
+  title = "^(Open.*Files?|Save.*Files?|All Files|Save)",
 }
 hl.window_rule({ match = file_picker_match, float = true })
 hl.window_rule({ match = file_picker_match, center = true })
@@ -38,13 +38,13 @@ hl.window_rule({ match = { class = pavucontrol_class }, center = true })
 
 -- Fix some dragging issues with XWayland.
 hl.window_rule({
-    match = {
-        class = "^$",
-        title = "^$",
-        xwayland = true,
-        float = true,
-        fullscreen = false,
-        pin = false,
-    },
-    no_focus = true,
+  match = {
+    class = "^$",
+    title = "^$",
+    xwayland = true,
+    float = true,
+    fullscreen = false,
+    pin = false,
+  },
+  no_focus = true,
 })

@@ -1,4 +1,4 @@
-@import "deep-ocean.css";
+@import "current-theme.css";
 
 * {
   font-family: JetBrainsMonoNerdFont, FontAwesome, Roboto, Helvetica, Arial, sans-serif;
@@ -207,4 +207,3 @@ button:active {
   background-color: @muted_bg;
   color: @fg_disabled;
 }
-
