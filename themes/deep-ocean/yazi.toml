@@ -1,0 +1,74 @@
+[mgr]
+cwd = { fg = "#00E5FF" }
+
+hovered         = { fg = "#0F111A", bg = "#2979FF" }
+preview_hovered = { fg = "#0F111A", bg = "#F5F5F5" }
+
+find_keyword  = { fg = "#FFD600", italic = true }
+find_position = { fg = "#D500F9", bg = "reset", italic = true }
+
+marker_copied   = { fg = "#69F0AE", bg = "#69F0AE" }
+marker_cut      = { fg = "#FF5252", bg = "#FF5252" }
+marker_marked   = { fg = "#00E5FF", bg = "#00E5FF" }
+marker_selected = { fg = "#2979FF", bg = "#2979FF" }
+
+tab_active   = { fg = "#0F111A", bg = "#F5F5F5" }
+tab_inactive = { fg = "#F5F5F5", bg = "#616161" }
+
+[mode]
+normal_main = { fg = "#0F111A", bg = "#2979FF", bold = true }
+normal_alt  = { fg = "#2979FF", bg = "#2E3C43" }
+
+select_main = { fg = "#0F111A", bg = "#69F0AE", bold = true }
+select_alt  = { fg = "#69F0AE", bg = "#2E3C43" }
+
+unset_main  = { fg = "#0F111A", bg = "#FF5252", bold = true }
+unset_alt   = { fg = "#FF5252", bg = "#2E3C43" }
+
+[status]
+separator_open = ""
+separator_close = ""
+
+progress_label  = { fg = "#FFFFFF", bold = true }
+progress_normal = { fg = "#2979FF", bg = "#616161" }
+progress_error  = { fg = "#FF5252", bg = "#616161" }
+
+perm_type  = { fg = "#2979FF" }
+perm_read  = { fg = "#FFD600" }
+perm_write = { fg = "#FF5252" }
+perm_exec  = { fg = "#69F0AE" }
+perm_sep   = { fg = "#616161" }
+
+[input]
+border   = { fg = "#2979FF" }
+selected = { reversed = true }
+
+[pick]
+border = { fg = "#2979FF" }
+active = { fg = "#D500F9" }
+
+[confirm]
+border  = { fg = "#2979FF" }
+title   = { fg = "#2979FF" }
+btn_yes = { reversed = true }
+btn_no  = {}
+
+[which]
+mask            = { bg = "#2E3C43" }
+cand            = { fg = "#00E5FF" }
+rest            = { fg = "#E0E0E0" }
+desc            = { fg = "#D500F9" }
+separator       = "  "
+separator_style = { fg = "#616161" }
+
+[help]
+on      = { fg = "#00E5FF" }
+run     = { fg = "#D500F9" }
+desc    = { fg = "#E0E0E0" }
+hovered = { bg = "#616161", bold = true }
+footer  = { fg = "#F5F5F5", bg = "#616161" }
+
+[notify]
+title_info  = { fg = "#00E5FF" }
+title_warn  = { fg = "#FFD600" }
+title_error = { fg = "#FF5252" }

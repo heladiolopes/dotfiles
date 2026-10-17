@@ -1,0 +1,10 @@
+* {
+  background: #0F111AF2;
+  surface:    #1C252B;
+  overlay:    #2E3C43;
+  accent:     #2979FF;
+  border:     #E0E0E0;
+  foreground: #E0E0E0;
+  muted:      #8F8F8F;
+  selected:   #0F111A;
+}

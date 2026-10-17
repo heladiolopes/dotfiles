@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+
+set -uo pipefail
+DOTFILES_ROOT=${DOTFILES_ROOT:-$(CDPATH='' cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)}
+export DOTFILES_ROOT
+# shellcheck disable=SC1091
+source "$DOTFILES_ROOT/scripts/lib/common.sh"
+# shellcheck disable=SC1091
+source "$DOTFILES_ROOT/scripts/lib/config.sh"
+# shellcheck disable=SC1091
+source "$DOTFILES_ROOT/scripts/lib/userdirs.sh"
+# shellcheck disable=SC1091
+source "$DOTFILES_ROOT/scripts/lib/validate.sh"
+
+target=''
+declare -a profiles=()
+while (($#)); do
+  case "$1" in
+    --target)
+      shift
+      (($#)) || { printf 'dotfiles: --target requires a path\n' >&2; exit 2; }
+      target=$1
+      ;;
+    -h|--help)
+      printf 'Usage: ./scripts/validate [--target PATH] [PROFILE ...]\n'
+      exit 0
+      ;;
+    --*) printf 'dotfiles: unknown option: %s\n' "$1" >&2; exit 2 ;;
+    *) profiles+=("$1") ;;
+  esac
+  shift
+done
+
+if [[ -n $target && ${#profiles[@]} -eq 0 ]]; then
+  printf 'dotfiles: target validation requires at least one profile\n' >&2
+  exit 2
+fi
+if ! dotfiles_validate_repository "${profiles[@]}"; then
+  printf 'dotfiles: %s\n' "$DOTFILES_ERROR" >&2
+  exit 2
+fi
+[[ -n $target ]] || exit 0
+dotfiles_inspect_target "$target"
+status=$?
+if ((status == 2)); then printf 'dotfiles: %s\n' "$DOTFILES_ERROR" >&2; fi
+exit "$status"

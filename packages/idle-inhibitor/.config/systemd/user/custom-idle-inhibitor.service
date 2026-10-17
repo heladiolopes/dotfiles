@@ -1,0 +1,6 @@
+[Unit]
+Description=Desktop idle inhibitor
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/systemd-inhibit --what=idle --mode=block --who=idle-inhibitor "--why=User-requested idle inhibition" /usr/bin/sleep infinity

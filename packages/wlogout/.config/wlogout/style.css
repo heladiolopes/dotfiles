@@ -1,0 +1,60 @@
+@import "current-theme.css";
+
+* {
+  background-image: none;
+  font-size: 20px;
+  font-family: "JetBrainsMono Nerd Font";
+}
+
+window {
+  background-color: rgba(0, 0, 0, 0.55);
+}
+
+button {
+  margin: 2px;
+  color: @foreground;
+  background-color: @background;
+  border: 2px solid @foreground;
+  border-radius: 10px;
+
+  animation: gradient_f 20s ease-in infinite;
+
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 20%;
+}
+
+button:hover, button:focus {
+  color: @hover-foreground;
+  background-color: @hover-background;
+  border: 2px solid @hover-foreground;
+
+  animation: gradient_f 20s ease-in infinite;
+  transition: all 0.3s cubic-bezier(.55,0.0,.28,1.682);
+
+  background-size: 30%;
+}
+
+#lock {
+    background-image: image(url("./icons/lock.png"));
+}
+
+#logout {
+    background-image: image(url("./icons/logout.png"));
+}
+
+#suspend {
+    background-image: image(url("./icons/sleep.png"));
+}
+
+#shutdown {
+    background-image: image(url("./icons/power.png"));
+}
+
+#reboot {
+    background-image: image(url("./icons/restart.png"));
+}
+
+#hibernate {
+    background-image: image(url("./icons/hibernate.png"));
+}

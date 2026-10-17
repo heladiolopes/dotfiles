@@ -1,0 +1,154 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+die() {
+  printf 'background-switch: %s\n' "$*" >&2
+  exit 1
+}
+
+data_home=${HOME:?HOME is required}/.local/share
+selection=$data_home/backgrounds/current
+default_background=misty-mountain-valley-bridge-at-dusk.jpg
+script_path=$(readlink -f -- "${BASH_SOURCE[0]}")
+repo_root=$(CDPATH='' cd -- "$(dirname -- "$script_path")/../../../.." && pwd)
+background_root=$repo_root/assets/backgrounds
+shared_root=${BACKGROUND_SWITCH_SHARED_ROOT:-/var/lib/workstation/sddm-background}
+shared_image=$shared_root/current
+
+warn() {
+  printf 'background-switch: warning: %s\n' "$*" >&2
+}
+
+valid_name() {
+  [[ $1 =~ ^[a-zA-Z0-9][a-zA-Z0-9._-]*\.(jpg|jpeg|png)$ ]]
+}
+
+available_backgrounds() {
+  local entry name
+  for entry in "$background_root"/*; do
+    [[ -f $entry && ! -L $entry ]] || continue
+    name=${entry##*/}
+    valid_name "$name" && printf '%s\n' "$name"
+  done | LC_ALL=C sort
+}
+
+preflight_selection() {
+  local parent current component
+  if [[ (-e $selection || -L $selection) && ! -L $selection ]]; then
+    die "refusing to replace non-symlink: $selection"
+  fi
+  parent=${selection%/*}
+  current=/
+  local -a components
+  IFS=/ read -r -a components <<<"${parent#/}"
+  for component in "${components[@]}"; do
+    [[ -n $component ]] || continue
+    current=${current%/}/$component
+    if [[ (-e $current || -L $current) && ! -d $current ]]; then
+      die "destination ancestor is not a directory: $current"
+    fi
+  done
+  if [[ -L $selection ]]; then
+    local target name
+    target=$(readlink -- "$selection")
+    name=${target##*/}
+    valid_name "$name" && [[ $target == "$background_root/$name" ]] ||
+      die "refusing to replace unmanaged symlink: $selection"
+  fi
+}
+
+current_background() {
+  preflight_selection
+  if [[ ! -L $selection ]]; then
+    printf '%s\n' "$default_background"
+    return
+  fi
+  local target
+  target=$(readlink -- "$selection")
+  printf '%s\n' "${target##*/}"
+}
+
+apply_background() {
+  local name=$1 source temporary
+  valid_name "$name" || die "invalid background name: $name"
+  source=$background_root/$name
+  [[ -f $source && ! -L $source ]] || die "unknown background: $name"
+  preflight_selection
+  if [[ -d $shared_root ]]; then
+    [[ -w $shared_root ]] || die "shared background directory is not writable: $shared_root"
+    [[ ! -L $shared_image && (! -e $shared_image || -f $shared_image) ]] ||
+      die "refusing to replace conflicting shared image: $shared_image"
+  elif [[ -e $shared_root || -L $shared_root ]]; then
+    die "shared background path is not a directory: $shared_root"
+  fi
+
+  if [[ ! -L $selection || $(readlink -- "$selection") != "$source" ]]; then
+    mkdir -p -- "${selection%/*}"
+    temporary=$selection.tmp.$$
+    ln -s -- "$source" "$temporary"
+    mv -Tf -- "$temporary" "$selection"
+  fi
+
+  if [[ -d $shared_root ]] && { [[ ! -f $shared_image ]] || ! cmp -s -- "$source" "$shared_image"; }; then
+    temporary=$(mktemp "$shared_root/.current.XXXXXXXX") || die 'could not stage SDDM background'
+    if ! install -m 0644 -- "$source" "$temporary" || ! mv -Tf -- "$temporary" "$shared_image"; then
+      rm -f -- "$temporary"
+      die 'could not publish SDDM background'
+    fi
+  fi
+
+  if [[ ${BACKGROUND_SWITCH_NO_RELOAD:-0} != 1 && -n ${HYPRLAND_INSTANCE_SIGNATURE:-} ]] &&
+    command -v hyprctl >/dev/null 2>&1 && command -v pgrep >/dev/null 2>&1 &&
+    pgrep -x hyprpaper >/dev/null 2>&1; then
+    hyprctl hyprpaper wallpaper ",$source,cover" >/dev/null 2>&1 || warn 'Hyprpaper could not be updated'
+  fi
+  printf 'Applied background: %s\n' "$name"
+}
+
+usage() {
+  cat <<'EOF'
+Usage: background-switch [FILENAME]
+       background-switch --apply
+       background-switch --current
+       background-switch --list
+       background-switch --help
+
+With no argument, choose a background using Rofi.
+EOF
+}
+
+case ${1:-} in
+--apply)
+  (($# == 1)) || die '--apply takes no arguments'
+  apply_background "$(current_background)"
+  ;;
+--current)
+  (($# == 1)) || die '--current takes no arguments'
+  current_background
+  ;;
+--list)
+  (($# == 1)) || die '--list takes no arguments'
+  available_backgrounds
+  ;;
+--help | -h)
+  (($# == 1)) || die '--help takes no arguments'
+  usage
+  ;;
+'')
+  command -v rofi >/dev/null 2>&1 || die 'Rofi is required for interactive selection; pass a filename instead'
+  selected=$(
+    while IFS= read -r name; do
+      printf '%s\0icon\x1fthumbnail://%s\n' "$name" "$background_root/$name"
+    done < <(available_backgrounds) | rofi -dmenu -i -no-custom -show-icons \
+      -theme "$HOME/.config/rofi/image-preview.rasi" -p " Background"
+  ) || exit 0
+  [[ -n $selected ]] || exit 0
+  apply_background "$selected"
+  ;;
+--*) die "unknown option: $1" ;;
+*)
+  (($# == 1)) || die 'expected one background filename'
+  apply_background "$1"
+  ;;
+esac

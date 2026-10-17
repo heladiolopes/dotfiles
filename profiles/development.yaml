@@ -1,0 +1,12 @@
+packages:
+  - bat
+  - btop
+  - git
+  - kitty
+  - tmux
+  - yazi
+  - zsh
+  - nvim
+  - vim
+  - lazygit
+

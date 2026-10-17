@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>name</key><string>Deep Ocean</string>
+  <key>settings</key>
+  <array>
+    <dict><key>settings</key><dict><key>background</key><string>#0F111A</string><key>caret</key><string>#FF4151</string><key>foreground</key><string>#E0E0E0</string><key>invisibles</key><string>#4C566A</string><key>lineHighlight</key><string>#1C252B</string><key>selection</key><string>#2E3C43</string></dict></dict>
+    <dict><key>name</key><string>Comments</string><key>scope</key><string>comment</string><key>settings</key><dict><key>foreground</key><string>#616161</string><key>fontStyle</key><string>italic</string></dict></dict>
+    <dict><key>name</key><string>Strings</string><key>scope</key><string>string</string><key>settings</key><dict><key>foreground</key><string>#00E676</string></dict></dict>
+    <dict><key>name</key><string>Keywords</string><key>scope</key><string>keyword, storage</string><key>settings</key><dict><key>foreground</key><string>#D500F9</string></dict></dict>
+    <dict><key>name</key><string>Constants</string><key>scope</key><string>constant, support.constant</string><key>settings</key><dict><key>foreground</key><string>#00E5FF</string></dict></dict>
+    <dict><key>name</key><string>Functions</string><key>scope</key><string>entity.name.function, support.function</string><key>settings</key><dict><key>foreground</key><string>#2979FF</string></dict></dict>
+  </array>
+  <key>uuid</key><string>EE3A9E68-5F0E-4C99-92E1-91AC8F77F007</string>
+</dict>
+</plist>

@@ -1,0 +1,9 @@
+packages:
+  - hypr
+  - idle-inhibitor
+  - kanshi
+  - rofi
+  - swayosd
+  - userdirs
+  - waybar
+  - wlogout

@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+DOTFILES_ROOT=$(CDPATH='' cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
+export DOTFILES_ROOT
+# shellcheck disable=SC1091
+source "$DOTFILES_ROOT/scripts/lib/common.sh"
+# shellcheck disable=SC1091
+source "$DOTFILES_ROOT/scripts/lib/config.sh"
+
+usage() {
+  printf 'Usage: %s [--target PATH] PROFILE [PROFILE ...]\n' "$0"
+}
+
+target=${HOME:-}
+profiles=()
+while (($#)); do
+  case $1 in
+    --target)
+      shift
+      (($#)) || { usage >&2; exit 2; }
+      target=$1
+      ;;
+    -h|--help) usage; exit 0 ;;
+    -*) printf 'dotfiles: unknown option: %s\n' "$1" >&2; exit 2 ;;
+    *) profiles+=("$1") ;;
+  esac
+  shift
+done
+((${#profiles[@]})) || { usage >&2; exit 2; }
+[[ -n $target ]] || { printf 'dotfiles: HOME is unset; pass --target PATH\n' >&2; exit 2; }
+
+"$DOTFILES_ROOT/scripts/validate" --target "$target" "${profiles[@]}"
+if ! dotfiles_resolve_profiles "${profiles[@]}"; then
+  printf 'dotfiles: %s\n' "$DOTFILES_ERROR" >&2
+  exit 2
+fi
+if ((${#DOTFILES_PACKAGES[@]})); then
+  stow --stow --no-folding --dir "$DOTFILES_ROOT/packages" \
+    --target "$target" "${DOTFILES_PACKAGES[@]}"
+fi
+for package in "${DOTFILES_PACKAGES[@]}"; do
+  if [[ $package == userdirs ]]; then
+    "$DOTFILES_ROOT/scripts/converge-userdirs" --target "$target"
+  fi
+done
+printf 'Dotfiles deployed to %s\n' "$target"

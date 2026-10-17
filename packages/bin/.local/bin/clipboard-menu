@@ -1,0 +1,194 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+die() {
+  printf 'clipboard-menu: %s\n' "$*" >&2
+  exit 1
+}
+
+thumbnail() {
+  [[ $# == 3 ]] || exit 2
+
+  local input=$1
+  local output=$2
+  local size=$3
+  local id
+
+  [[ $input =~ ^cliphist:([0-9]+)$ ]] || exit 1
+  id=${BASH_REMATCH[1]}
+
+  [[ $size =~ ^[0-9]+$ ]] || exit 1
+  ((size > 0 && size <= 4096)) || exit 1
+
+  command -v cliphist >/dev/null 2>&1 || exit 1
+  command -v magick >/dev/null 2>&1 || exit 1
+
+  cliphist decode "$id" |
+    magick - \
+      -auto-orient \
+      -thumbnail "${size}x${size}>" \
+      -strip \
+      "png:$output"
+}
+
+# Rofi invokes this script in this mode when it needs an image thumbnail.
+if [[ ${1:-} == --thumbnail ]]; then
+  shift
+  thumbnail "$@"
+  exit
+fi
+
+[[ $# == 0 ]] || {
+  printf 'Usage: clipboard-menu\n' >&2
+  exit 2
+}
+
+command -v cliphist >/dev/null 2>&1 || die 'cliphist is required'
+command -v rofi >/dev/null 2>&1 || die 'rofi is required'
+command -v wl-copy >/dev/null 2>&1 || die 'wl-copy is required'
+command -v magick >/dev/null 2>&1 || die 'ImageMagick (magick) is required'
+command -v wtype >/dev/null 2>&1 || die 'wtype is required'
+command -v hyprctl >/dev/null 2>&1 || die 'hyprctl is required'
+command -v jq >/dev/null 2>&1 || die 'jq is required'
+
+config_home=${XDG_CONFIG_HOME:-${HOME:?HOME is not set}/.config}
+theme="$config_home/rofi/image-preview.rasi"
+
+listing=$(cliphist list) || die 'could not list clipboard history'
+
+declare -a ids=()
+declare -a previews=()
+declare -a mimes=()
+
+infer_image_mime() {
+  local preview=$1
+  local binary_preview_re
+  local format
+
+  inferred_mime=
+  binary_preview_re='^\[\[ binary data .* ([[:alnum:]+.-]+) [0-9]+x[0-9]+ \]\]$'
+
+  if [[ ! $preview =~ $binary_preview_re ]]; then
+    return
+  fi
+
+  format=${BASH_REMATCH[1],,}
+
+  case $format in
+  png) inferred_mime='image/png' ;;
+  jpg | jpeg) inferred_mime='image/jpeg' ;;
+  gif) inferred_mime='image/gif' ;;
+  webp) inferred_mime='image/webp' ;;
+  bmp) inferred_mime='image/bmp' ;;
+  tif | tiff) inferred_mime='image/tiff' ;;
+  svg) inferred_mime='image/svg+xml' ;;
+  avif) inferred_mime='image/avif' ;;
+  heic) inferred_mime='image/heic' ;;
+  esac
+}
+
+while IFS= read -r line; do
+  [[ $line == *$'\t'* ]] || continue
+
+  id=${line%%$'\t'*}
+  preview=${line#*$'\t'}
+
+  [[ $id =~ ^[0-9]+$ ]] || continue
+
+  ids+=("$id")
+  previews+=("$preview")
+  infer_image_mime "$preview"
+  mimes+=("$inferred_mime")
+done <<<"$listing"
+
+((${#ids[@]} > 0)) || exit 0
+
+# Resolve the path used by Rofi to call this script again for thumbnails.
+self=${BASH_SOURCE[0]}
+if [[ $self != */* ]]; then
+  self=$(command -v -- "$self") ||
+    die 'could not determine script path'
+fi
+
+printf -v self_quoted '%q' "$self"
+preview_cmd="$self_quoted --thumbnail \"{input}\" \"{output}\" \"{size}\""
+
+generate_rows() {
+  local index
+
+  for index in "${!ids[@]}"; do
+    if [[ ${mimes[index]} == image/* ]]; then
+      printf '%s\0icon\x1fthumbnail://cliphist:%s\n' \
+        "${previews[index]}" "${ids[index]}"
+    else
+      printf '%s\n' "${previews[index]}"
+    fi
+  done
+}
+
+if selected=$(
+  generate_rows |
+    rofi \
+      -dmenu \
+      -i \
+      -no-custom \
+      -show-icons \
+      -format i \
+      -preview-cmd "$preview_cmd" \
+      -theme "$theme" \
+      -p " Clipboard"
+); then
+  :
+else
+  code=$?
+
+  # Rofi returns 1 when the user cancels.
+  ((code == 1)) && exit 0
+  exit "$code"
+fi
+
+[[ $selected =~ ^(0|[1-9][0-9]*)$ ]] ||
+  die 'invalid selection'
+
+[[ ${#selected} -le 18 ]] ||
+  die 'invalid selection'
+
+index=$((10#$selected))
+
+((index >= 0 && index < ${#ids[@]})) ||
+  die 'invalid selection'
+
+id=${ids[index]}
+mime=${mimes[index]}
+
+paste_clipboard() {
+  local window_class
+
+  # Allow focus to return after Rofi closes.
+  sleep 0.05
+
+  window_class=$(
+    hyprctl activewindow -j |
+      jq -r '.class // empty' |
+      tr '[:upper:]' '[:lower:]'
+  )
+
+  case $window_class in
+  kitty | alacritty | foot | wezterm | org.wezfurlong.wezterm | ghostty | com.mitchellh.ghostty)
+    # Terminal emulators generally use Ctrl+Shift+V.
+    wtype -M ctrl -M shift v -m shift -m ctrl
+    ;;
+  *)
+    wtype -M ctrl v -m ctrl
+    ;;
+  esac
+}
+
+if [[ -n $mime ]]; then
+  cliphist decode "$id" | wl-copy --type "$mime"
+else
+  cliphist decode "$id" | wl-copy
+fi
+
+paste_clipboard

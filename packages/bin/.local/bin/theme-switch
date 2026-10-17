@@ -1,0 +1,206 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+config_home=${XDG_CONFIG_HOME:-${HOME:?HOME is required}/.config}
+state_home=${XDG_STATE_HOME:-${HOME:?HOME is required}/.local/state}
+state_dir=$state_home/theme-switch
+state_file=$state_dir/current
+default_theme=deep-ocean
+script_path=$(readlink -f -- "${BASH_SOURCE[0]}")
+repo_root=$(CDPATH='' cd -- "$(dirname -- "$script_path")/../../../.." && pwd)
+theme_root=$repo_root/themes
+
+die() {
+  printf 'theme-switch: %s\n' "$*" >&2
+  exit 1
+}
+
+warn() {
+  printf 'theme-switch: warning: %s\n' "$*" >&2
+}
+
+available_themes() {
+  local directory
+  for directory in "$theme_root"/*; do
+    [[ -d $directory ]] || continue
+    basename -- "$directory"
+  done | LC_ALL=C sort
+}
+
+current_theme() {
+  local selected=$default_theme
+  if [[ -r $state_file ]]; then
+    IFS= read -r selected < "$state_file"
+  fi
+  printf '%s\n' "${selected:-$default_theme}"
+}
+
+metadata_value() {
+  local key=$1 metadata=$2
+  sed -n "s/^${key}=//p" "$metadata" | head -n 1
+}
+
+selector_paths() {
+  cat <<EOF
+$config_home/bat/themes/Current.tmTheme
+$config_home/btop/themes/current.theme
+$config_home/kitty/current-theme.conf
+$config_home/tmux/themes/current.conf
+$config_home/yazi/theme.toml
+$config_home/rofi/current-theme.rasi
+$config_home/swayosd/current-theme.css
+$config_home/waybar/current-theme.css
+$config_home/wlogout/current-theme.css
+EOF
+}
+
+preflight_destination() {
+  local destination=$1 parent current component
+  if [[ (-e $destination || -L $destination) && ! -L $destination ]]; then
+    die "refusing to replace non-symlink: $destination"
+  fi
+  parent=${destination%/*}
+  current=/
+  IFS=/ read -r -a components <<< "${parent#/}"
+  for component in "${components[@]}"; do
+    [[ -n $component ]] || continue
+    current=${current%/}/$component
+    if [[ (-e $current || -L $current) && ! -d $current ]]; then
+      die "destination ancestor is not a directory: $current"
+    fi
+  done
+}
+
+install_link() {
+  local source=$1 destination=$2 temporary
+  mkdir -p -- "${destination%/*}"
+  temporary=$destination.tmp.$$
+  ln -s -- "$source" "$temporary"
+  mv -Tf -- "$temporary" "$destination"
+}
+
+persist_theme() {
+  local selected=$1 temporary
+  mkdir -p -- "$state_dir"
+  temporary=$state_file.tmp.$$
+  printf '%s\n' "$selected" > "$temporary"
+  mv -f -- "$temporary" "$state_file"
+}
+
+reload_apps() {
+  local active_border=$1 inactive_border=$2
+  [[ ${THEME_SWITCH_NO_RELOAD:-0} == 1 ]] && return 0
+
+  if command -v hyprctl >/dev/null 2>&1 && [[ -n ${HYPRLAND_INSTANCE_SIGNATURE:-} ]]; then
+    hyprctl keyword general:col.active_border "rgba($active_border)" >/dev/null 2>&1 || warn 'Hyprland colors were not reloaded'
+    hyprctl keyword general:col.inactive_border "rgba($inactive_border)" >/dev/null 2>&1 || warn 'Hyprland colors were not reloaded'
+  fi
+  command -v pkill >/dev/null 2>&1 && pkill -USR1 -x kitty >/dev/null 2>&1 || true
+  command -v pkill >/dev/null 2>&1 && pkill -USR2 -x waybar >/dev/null 2>&1 || true
+  if command -v tmux >/dev/null 2>&1 && tmux list-sessions >/dev/null 2>&1; then
+    tmux source-file "$config_home/tmux/tmux.conf" >/dev/null 2>&1 || warn 'tmux sessions were not reloaded'
+  fi
+  if command -v pgrep >/dev/null 2>&1 && pgrep -x swayosd-server >/dev/null 2>&1; then
+    pkill -x swayosd-server >/dev/null 2>&1 || true
+    nohup swayosd-server >/dev/null 2>&1 &
+  fi
+}
+
+apply_theme() {
+  local selected=$1 theme_dir metadata active_border inactive_border
+  local temporary_root bat_runtime source destination index
+  local -a required_assets=(
+    bat.tmTheme btop.theme kitty.conf tmux.conf yazi.toml
+    rofi.rasi swayosd.css waybar.css wlogout.css hypr.conf
+  )
+  local -a sources destinations
+
+  [[ $selected =~ ^[a-z0-9][a-z0-9-]*$ ]] || die "invalid theme name: $selected"
+  theme_dir=$theme_root/$selected
+  [[ -d $theme_dir ]] || die "unknown theme: $selected"
+  for source in "${required_assets[@]}"; do
+    [[ -f $theme_dir/$source ]] || die "missing theme asset: $theme_dir/$source"
+  done
+
+  metadata=$theme_dir/hypr.conf
+  active_border=$(metadata_value active_border "$metadata")
+  inactive_border=$(metadata_value inactive_border "$metadata")
+  [[ $active_border =~ ^[[:xdigit:]]{8}$ ]] || die "invalid active_border in $metadata"
+  [[ $inactive_border =~ ^[[:xdigit:]]{8}$ ]] || die "invalid inactive_border in $metadata"
+
+  mapfile -t destinations < <(selector_paths)
+  for destination in "${destinations[@]}"; do preflight_destination "$destination"; done
+
+  temporary_root=$(mktemp -d "${TMPDIR:-/tmp}/theme-switch.XXXXXX") || die 'could not create temporary workspace'
+  trap 'rm -rf -- "$temporary_root"' RETURN
+  sed -E '0,/<key>name<\/key><string>[^<]*<\/string>/s//<key>name<\/key><string>Current<\/string>/' \
+    "$theme_dir/bat.tmTheme" > "$temporary_root/Current.tmTheme"
+
+  mkdir -p -- "$state_dir/runtime"
+  bat_runtime=$state_dir/runtime/Current.tmTheme
+  mv -f -- "$temporary_root/Current.tmTheme" "$bat_runtime"
+  sources=(
+    "$bat_runtime"
+    "$theme_dir/btop.theme"
+    "$theme_dir/kitty.conf"
+    "$theme_dir/tmux.conf"
+    "$theme_dir/yazi.toml"
+    "$theme_dir/rofi.rasi"
+    "$theme_dir/swayosd.css"
+    "$theme_dir/waybar.css"
+    "$theme_dir/wlogout.css"
+  )
+  for index in "${!destinations[@]}"; do
+    install_link "${sources[$index]}" "${destinations[$index]}"
+  done
+
+  if command -v bat >/dev/null 2>&1; then
+    bat cache --build >/dev/null 2>&1 || warn 'Bat cache could not be rebuilt'
+  fi
+  persist_theme "$selected"
+  reload_apps "$active_border" "$inactive_border"
+  printf 'Applied theme: %s\n' "$selected"
+}
+
+usage() {
+  cat <<'EOF'
+Usage: theme-switch [THEME]
+       theme-switch --apply
+       theme-switch --current
+       theme-switch --list
+       theme-switch --help
+
+With no argument, choose a theme using Rofi.
+EOF
+}
+
+case ${1:-} in
+  --apply)
+    (($# == 1)) || die '--apply takes no arguments'
+    apply_theme "$(current_theme)"
+    ;;
+  --current)
+    (($# == 1)) || die '--current takes no arguments'
+    current_theme
+    ;;
+  --list)
+    (($# == 1)) || die '--list takes no arguments'
+    available_themes
+    ;;
+  --help|-h)
+    (($# == 1)) || die '--help takes no arguments'
+    usage
+    ;;
+  '')
+    command -v rofi >/dev/null 2>&1 || die 'Rofi is required for interactive selection; pass a theme name instead'
+    selected=$(available_themes | rofi -dmenu -i -p Theme) || exit 0
+    [[ -n $selected ]] || exit 0
+    apply_theme "$selected"
+    ;;
+  --*) die "unknown option: $1" ;;
+  *)
+    (($# == 1)) || die 'expected one theme name'
+    apply_theme "$1"
+    ;;
+esac

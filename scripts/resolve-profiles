@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+set -uo pipefail
+DOTFILES_ROOT=${DOTFILES_ROOT:-$(CDPATH='' cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)}
+export DOTFILES_ROOT
+# shellcheck disable=SC1091
+source "$DOTFILES_ROOT/scripts/lib/common.sh"
+# shellcheck disable=SC1091
+source "$DOTFILES_ROOT/scripts/lib/config.sh"
+
+if ! dotfiles_resolve_profiles "$@"; then
+  printf 'dotfiles: %s\n' "$DOTFILES_ERROR" >&2
+  exit 2
+fi
+((${#DOTFILES_PACKAGES[@]})) && printf '%s\n' "${DOTFILES_PACKAGES[@]}"

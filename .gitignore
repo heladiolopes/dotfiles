@@ -1,24 +1,23 @@
-# Git username and e-mail
-git/.config/git/creds.config
+# Local configuration and credentials
+packages/git/.config/git/local.config
+packages/git/.config/git/creds.config
+.env
+.env.*
 
-# Executable binaries
-bin/.local/bin/*
-!bin/.local/bin/
-!bin/.local/bin/.gitkeep
-!bin/.local/bin/theme-switch
+# Local verification and tooling
+/tests/
+/fixtures/
+.agents/
+.codex/
+.vscode/
+.idea/
 
-# Cache
+# Caches and logs
+__pycache__/
+*.pyc
+.cache/
 .mypy_cache/
-
-# Codex
-.codex
-.agents
-
-# Cache and logs
-.nvimlog
-nvim.log
-*/.config/*/current-theme.*
-nvim/.config/nvim/lua/current-theme.lua
-btop/.config/btop/themes/current.theme
-hypr/.config/hypr/current-wallpaper
-tmux/.config/tmux/themes/current.conf
+.ruff_cache/
+.pytest_cache/
+*.log
+.DS_Store

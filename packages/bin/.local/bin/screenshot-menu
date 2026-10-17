@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+if (($# != 0)); then
+  printf 'Usage: screenshot-menu\n' >&2
+  exit 2
+fi
+
+if selection=$(printf '%s\n' \
+  'Region (clipboard only)' \
+  'Region' \
+  'Window (clipboard only)' \
+  'Window' \
+  'Monitor (clipboard only)' \
+  'Monitor' |
+  rofi -dmenu -i -no-custom -p " Screenshot"); then
+  :
+else
+  status=$?
+  ((status == 1)) && exit 0
+  exit "$status"
+fi
+
+case $selection in
+'Window') exec hyprshot -m window ;;
+'Window (clipboard only)') exec hyprshot -m window --clipboard-only ;;
+'Monitor') exec hyprshot -m output ;;
+'Monitor (clipboard only)') exec hyprshot -m output --clipboard-only ;;
+'Region') exec hyprshot -m region ;;
+'Region (clipboard only)') exec hyprshot -m region --clipboard-only ;;
+'') exit 0 ;;
+*)
+  printf 'screenshot-menu: unknown selection: %s\n' "$selection" >&2
+  exit 2
+  ;;
+esac

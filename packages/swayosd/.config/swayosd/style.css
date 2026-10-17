@@ -1,0 +1,36 @@
+@import "current-theme.css";
+
+window {
+  opacity: 0.8;
+  border: 2px solid @border;
+  border-radius: 10px;
+
+  background-color: @background;
+}
+
+label {
+  color: @label;
+  font-family: "JetBrainsMono Nerd Font";
+  font-size: 12pt;
+}
+
+image {
+  color: @image;
+}
+
+progressbar {
+  border-radius: 5px;
+  min-width: 300px;
+}
+
+progressbar progress {
+  background-image: none;
+  background-color: @progress;
+  border: 1px solid @border;
+}
+
+progressbar trough {
+  background-image: none;
+  background-color: @background;
+  border: 1px solid @border;
+}

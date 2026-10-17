@@ -1,0 +1,77 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+if (($# != 0)); then
+  printf 'Usage: keybindings-menu\n' >&2
+  exit 2
+fi
+
+if ! bindings=$(hyprctl binds -j); then
+  printf 'keybindings-menu: could not read Hyprland bindings\n' >&2
+  exit 1
+fi
+
+if ! entries=$(jq -r '
+  def modifier($mask; $bit; $name):
+    if (($mask / $bit | floor) % 2) == 1 then $name else empty end;
+  def display_key($key):
+    ({
+      "backslash": "\\",
+      "slash": "/",
+      "RETURN": "⏎",
+      "SPACE": "␣",
+      "PRINT": "PrtSc",
+      "XF86AudioRaiseVolume": "",
+      "XF86AudioLowerVolume": "",
+      "XF86AudioMute": "",
+      "XF86AudioMicMute": "",
+      "XF86MonBrightnessUp": "󰃠",
+      "XF86MonBrightnessDown": "󰃞",
+      "XF86AudioNext": "",
+      "XF86AudioPause": "",
+      "XF86AudioPlay": "",
+      "XF86AudioPrev": ""
+    }[$key] // $key);
+  def shortcut($bind; $key):
+    [modifier($bind.modmask // 0; 64; "Super"),
+     modifier($bind.modmask // 0; 4; "Ctrl"),
+     modifier($bind.modmask // 0; 8; "Alt"),
+     modifier($bind.modmask // 0; 1; "Shift"),
+     $key] | join("+");
+  def parse_label($description):
+    if ($description | test("^[^:]+: .+$")) then
+      $description | capture("^(?<kind>[^:]+): (?<detail>.+)$")
+    else
+      {kind: "Other", detail: (if $description == "" then "(unlabeled)" else $description end)}
+    end;
+  [ .[]
+    | select((.key // "") != "" and .mouse != true and ((.key // "" | startswith("mouse")) | not))
+    | . as $bind
+    | {raw_shortcut: shortcut($bind; $bind.key),
+       shortcut: shortcut($bind; display_key($bind.key))}
+      + parse_label($bind.description // "")
+  ] | sort_by(.kind, .raw_shortcut) as $rows
+  | (($rows | map(.shortcut | length) | max) // 0) as $shortcut_width
+  | (($rows | map(.kind | length) | max) // 0) as $kind_width
+  | $rows[]
+  | .shortcut + (" " * ($shortcut_width - (.shortcut | length)))
+    + " - " + .kind + (" " * ($kind_width - (.kind | length)))
+    + " " + .detail
+' <<< "$bindings"); then
+  printf 'keybindings-menu: could not parse Hyprland bindings\n' >&2
+  exit 1
+fi
+
+if [[ -z $entries ]]; then
+  printf 'keybindings-menu: no keyboard bindings found\n' >&2
+  exit 1
+fi
+
+if printf '%s\n' "$entries" | rofi -dmenu -i -no-custom -p ' Shortcuts' > /dev/null; then
+  exit 0
+else
+  status=$?
+  ((status == 1)) && exit 0
+  exit "$status"
+fi

@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+unit=custom-idle-inhibitor.service
+waybar_signal=8
+
+usage() {
+  printf 'Usage: idle-inhibitor {toggle|on|off|status}\n' >&2
+  exit 2
+}
+
+active() {
+  systemctl --user is-active --quiet "$unit"
+}
+
+signal_waybar() {
+  pkill -"RTMIN+$waybar_signal" -x waybar 2>/dev/null || true
+}
+
+(($# == 1)) || usage
+case $1 in
+  toggle)
+    if active; then
+      systemctl --user stop "$unit"
+    else
+      systemctl --user start "$unit"
+    fi
+    signal_waybar
+    ;;
+  on)
+    systemctl --user start "$unit"
+    signal_waybar
+    ;;
+  off)
+    systemctl --user stop "$unit"
+    signal_waybar
+    ;;
+  status)
+    if active; then
+      printf '{"alt":"activated","class":"activated","tooltip":"Idle inhibitor active"}\n'
+    else
+      printf '{"alt":"deactivated","class":"deactivated","tooltip":"Idle inhibitor inactive"}\n'
+    fi
+    ;;
+  *) usage ;;
+esac

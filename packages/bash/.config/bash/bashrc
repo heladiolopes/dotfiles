@@ -1,0 +1,48 @@
+# shellcheck disable=SC1090
+case $- in
+  *i*) ;;
+  *) return ;;
+esac
+
+workstation_source() {
+  [ ! -r "$1" ] || . "$1"
+}
+
+shell_config_home="${XDG_CONFIG_HOME:-$HOME/.config}"
+workstation_source "$shell_config_home/shell/env.sh"
+workstation_source "$shell_config_home/shell/aliases.sh"
+workstation_source "$shell_config_home/shell/functions.sh"
+
+HISTCONTROL=ignoreboth:erasedups
+HISTSIZE=10000
+HISTFILESIZE=20000
+HISTFILE="${XDG_CACHE_HOME:-$HOME/.cache}/bash/history"
+mkdir -p -- "${HISTFILE%/*}"
+shopt -s histappend checkwinsize
+
+if ! shopt -oq posix && [ -r /usr/share/bash-completion/bash_completion ]; then
+  workstation_source /usr/share/bash-completion/bash_completion
+fi
+
+bind '"\e[A": history-search-backward'
+bind '"\e[B": history-search-forward'
+
+if [ -t 0 ] && command -v fzf >/dev/null 2>&1; then
+  eval "$(fzf --bash)"
+fi
+
+if command -v zoxide >/dev/null 2>&1; then
+  eval "$(zoxide init --cmd cd bash)"
+fi
+
+if command -v pyenv >/dev/null 2>&1; then
+  if [ -w "$PYENV_ROOT/shims" ] || [ ! -e "$PYENV_ROOT/shims" ]; then
+    eval "$(pyenv init - bash)"
+  else
+    eval "$(pyenv init - bash --no-rehash)"
+  fi
+fi
+
+workstation_source "${XDG_CONFIG_HOME:-$HOME/.config}/bash/prompt.bash"
+unset shell_config_home
+unset -f workstation_source

@@ -1,0 +1,39 @@
+git:
+  commit:
+    signOff: true
+    autoWrapCommitMessage: true
+    autoWrapWidth: 72
+
+  diffRenderers:
+    - type: stdinFilter
+      name: diff-so-fancy
+      command: diff-so-fancy
+      colorArg: always
+
+    - type: rawGit
+      name: word-diff
+      args:
+        - --color-words
+
+    - type: rawGit
+      name: default
+
+  mainBranches:
+    - develop
+    - main
+    - master
+
+  log:
+    order: topo-order
+    showGraph: always
+    showWholeGraph: false
+
+  localBranchSortOrder: recency
+
+gui:
+  commitLength:
+    show: true
+
+os:
+  editPreset: nvim
+

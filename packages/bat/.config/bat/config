@@ -1,0 +1,4 @@
+# Keep output compact while retaining useful source context.
+--style="numbers,changes,header"
+
+--theme="Current"

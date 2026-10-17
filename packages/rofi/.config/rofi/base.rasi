@@ -1,0 +1,129 @@
+@theme "~/.config/rofi/current-theme.rasi"
+
+* {
+  font: "JetBrainsMono Nerd Font 12";
+
+  background-color: transparent;
+  text-color:       @foreground;
+
+  margin:  0;
+  padding: 0;
+  spacing: 0;
+}
+
+window {
+  anchor:   north;
+  location: north;
+  y-offset: 15%;
+  width:    40%;
+  // height:   50%;
+
+  border:        2px;
+  border-radius: 5px;
+  border-color:  @border;
+
+  background-color: @background;
+}
+
+mainbox {
+  padding: 15px;
+
+  children: [ inputbar, mode-switcher, listview, message ];
+}
+
+// Inputbar
+inputbar {
+  padding: 10px 14px;
+  spacing: 8px;
+  children: [ prompt, entry ];
+
+  border:         2px;
+  border-radius:  5px;
+  border-color:   @border;
+
+  background-color: @surface;
+}
+
+prompt {
+  text-color: @muted;
+}
+
+entry {
+  placeholder:       "Search";
+  placeholder-color: @muted;
+}
+
+//
+// Mode Switcher
+//
+mode-switcher {
+  margin: 12px 0 0;
+}
+
+//
+// Message
+//
+message {
+  margin:             12px 0 0;
+
+  border:             2px;
+  border-radius:      5px;
+  border-color:       @border;
+
+  background-color:   @background;
+}
+
+textbox {
+  padding:    10px 20px;
+  text-color: @foreground;
+}
+
+//
+// List View
+//
+listview {
+  background-color: transparent;
+
+  margin:  12px 0 0;
+  lines:   8;
+  columns: 1;
+
+  fixed-height: false;
+
+  border: 2px;
+  border-color: @border;
+  border-radius:  5px;
+
+}
+
+element {
+  margin:         2px;
+  padding:        5px 15px;
+  spacing:        10px;
+
+  border-radius:  5px;
+}
+
+element normal active {
+  background-color: @surface;
+  text-color:       @accent;
+}
+
+// element alternate active {
+//   text-color: #ff0000;
+// }
+
+element selected normal,
+element selected active {
+  background-color: @accent;
+  text-color:       @selected;
+}
+
+element-icon {
+  size:           1.2em;
+  vertical-align: 0.5;
+}
+
+element-text {
+  text-color: inherit;
+}

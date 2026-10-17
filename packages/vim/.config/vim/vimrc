@@ -1,0 +1,179 @@
+" ========== General ==========
+set nocompatible              " Disable vi compatibility mode
+let mapleader = ' '
+let maplocalleader = ' '
+filetype plugin indent on     " Detect file types and load indent rules
+syntax enable                " Enable syntax highlighting
+set noshowmode               " Hide the current mode in the command line
+set cursorline               " Highlight the current line
+set mouse=a                  " Enable the mouse
+set confirm                  " Prompt before discarding changes
+
+" ========== Indentation ==========
+set expandtab                " Use spaces instead of tabs
+set tabstop=2                " Display tabs as two columns
+set softtabstop=2            " Insert two spaces when pressing Tab
+set shiftwidth=2             " Indent by two spaces
+set breakindent              " Preserve indentation on wrapped lines
+
+" ========== Search ==========
+set ignorecase               " Ignore case by default
+set smartcase                " Match case when the query contains capitals
+set incsearch                " Show matches while typing
+set hlsearch                 " Highlight matches
+set path+=**                 " Search subdirectories with :find
+
+" ========== Interface ==========
+set number                   " Show the current line number
+set relativenumber           " Show relative line numbers
+set noruler                  " Hide the command-line ruler
+set splitbelow               " Open horizontal splits below
+set splitright               " Open vertical splits to the right
+set background=dark          " Use a dark background
+set scrolloff=10             " Keep context above and below the cursor
+set list                     " Show configured whitespace characters
+set listchars=tab:\ \ ,trail:·,nbsp:␣
+set colorcolumn=80,101       " Mark column limits
+set foldenable               " Enable folds
+set foldlevel=99 foldlevelstart=99
+set completeopt=menu,menuone,noselect
+set endofline fixendofline   " Ensure a final newline
+set timeoutlen=300 updatetime=250
+
+" Enable options supported by this Vim build and terminal.
+if exists('+signcolumn')
+  set signcolumn=yes
+endif
+if has('termguicolors')
+  set termguicolors
+endif
+if has('clipboard')
+  set clipboard=unnamedplus
+endif
+if has('persistent_undo')
+  " Store undo history outside the project.
+  let s:undo_dir = expand('~/.vim/undo')
+  if !isdirectory(s:undo_dir)
+    try
+      call mkdir(s:undo_dir, 'p')
+    catch /^Vim\%((\a\+)\)\=:E739/
+      " Continue without persistent undo if home is read-only.
+    endtry
+  endif
+  if isdirectory(s:undo_dir)
+    let &undodir = s:undo_dir
+    set undofile
+  endif
+  unlet s:undo_dir
+endif
+
+" ========== Mappings ==========
+" Leave insert mode and save from either mode.
+inoremap jj <Esc>
+inoremap <C-s> <Esc>:write<CR>
+nnoremap <C-s> :write<CR>
+
+" Navigate windows and keep context while scrolling.
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
+nnoremap <C-u> <C-u>zz
+nnoremap <C-d> <C-d>zz
+
+" Clear search highlights and avoid overwriting registers when deleting.
+nnoremap <Esc> :nohlsearch<CR>
+nnoremap x "_x
+nnoremap <leader>+ <C-a>
+nnoremap <leader>- <C-x>
+
+" Manage splits and buffers with built-in commands.
+nnoremap <leader>sv <C-w>v
+nnoremap <leader>sh <C-w>s
+nnoremap <leader>se <C-w>=
+nnoremap <leader>sx :close<CR>
+nnoremap <leader>bn :enew<CR>
+nnoremap <leader>bq :bdelete<CR>
+nnoremap <S-h> :bprevious<CR>
+nnoremap <S-l> :bnext<CR>
+nnoremap <leader>qq :quitall<CR>
+nnoremap <leader>qQ :quitall!<CR>
+tnoremap <Esc><Esc> <C-\><C-n>
+
+" ========== Files and search ==========
+" :find, :ls, and :oldfiles replace Telescope pickers.
+nnoremap <leader>ff :find<Space>
+nnoremap <leader>fb :ls<CR>:buffer<Space>
+nnoremap <leader>fr :browse oldfiles<CR>
+nnoremap <leader>fh :help<Space>
+nnoremap <leader>fc :command<Space>
+
+" Quickfix and location lists replace Trouble views.
+nnoremap <leader>xq :copen<CR>
+nnoremap <leader>xl :lopen<CR>
+
+" ========== Netrw ==========
+" Vim's built-in file browser replaces Neo-tree.
+nnoremap <leader>et :Explore<CR>
+nnoremap <leader>er :Explore %:p:h<CR>
+nnoremap <leader>eb :ls<CR>
+
+" ========== Project search ==========
+function! s:ProjectGrep() abort
+  let l:term = input('Search project: ')
+  if empty(l:term)
+    return
+  endif
+  " :vimgrep uses Vim regular expressions and searches subdirectories.
+  execute 'silent! vimgrep /' . escape(l:term, '/\') . '/gj **/*'
+  if empty(getqflist())
+    echo 'No matches'
+  else
+    copen
+  endif
+endfunction
+nnoremap <silent> <leader>fg :call <SID>ProjectGrep()<CR>
+
+" ========== Editing ==========
+" Yank the whole file, then duplicate or move lines and selections.
+nnoremap yf :%yank<CR>
+nnoremap <silent> <C-A-j> :copy .<CR>
+nnoremap <silent> <C-A-k> :copy .-1<CR>
+nnoremap <silent> <C-A-Down> :copy .<CR>
+nnoremap <silent> <C-A-Up> :copy .-1<CR>
+nnoremap <silent> <A-j> :move .+1<CR>==
+nnoremap <silent> <A-k> :move .-2<CR>==
+nnoremap <silent> <A-Down> :move .+1<CR>==
+nnoremap <silent> <A-Up> :move .-2<CR>==
+xnoremap <silent> <C-A-j> :copy '>+1<CR>gv
+xnoremap <silent> <C-A-k> :copy '<-1<CR>gv
+xnoremap <silent> <C-A-Down> :copy '>+1<CR>gv
+xnoremap <silent> <C-A-Up> :copy '<-1<CR>gv
+xnoremap <silent> <A-j> :move '>+1<CR>gv=gv
+xnoremap <silent> <A-k> :move '<-2<CR>gv=gv
+xnoremap <silent> <A-Down> :move '>+1<CR>gv=gv
+xnoremap <silent> <A-Up> :move '<-2<CR>gv=gv
+" Preserve the last yank when replacing a selection.
+xnoremap p "_dP
+
+" ========== Cleanup on save ==========
+" Remove trailing whitespace and extra blank lines, then restore the view.
+function! s:TrimOnSave() abort
+  if &buftype !=# '' || !&modifiable || &readonly || &binary
+    return
+  endif
+  let l:view = winsaveview()
+  try
+    silent! keeppatterns %s/[ \t]\+$//e
+    while line('$') > 1 && getline('$') =~# '^\s*$'
+      silent! $delete _
+    endwhile
+    setlocal endofline fixendofline
+  finally
+    call winrestview(l:view)
+  endtry
+endfunction
+augroup StandaloneVimCleanup
+  autocmd!
+  autocmd BufWritePre * call <SID>TrimOnSave()
+augroup END

@@ -1,0 +1,10 @@
+@define-color background #0f111a;
+@define-color surface #1c252b;
+@define-color overlay #2e3c43;
+@define-color foreground #e0e0e0;
+@define-color muted #8f8f8f;
+@define-color accent #2979ff;
+@define-color selected #0f111a;
+@define-color success #00e676;
+@define-color danger #ff5252;
+@define-color border #e0e0e0;

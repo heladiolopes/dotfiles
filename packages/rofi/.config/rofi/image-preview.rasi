@@ -1,0 +1,33 @@
+@theme "~/.config/rofi/base.rasi"
+
+window {
+  width:    70%;
+  height:   60%;
+  y-offset: 15%;
+}
+
+mainbox {
+  children: [ inputbar, preview-layout, message ];
+}
+
+preview-layout {
+  orientation: horizontal;
+  spacing: 16px;
+  margin: 12px 0 0;
+  children: [ listview, icon-current-entry ];
+}
+
+listview {
+  width: 35%;
+  margin: 0;
+  lines: 10;
+}
+
+element {
+  children: [ element-text ];
+}
+
+icon-current-entry {
+  size: 24em;
+  squared: false;
+}

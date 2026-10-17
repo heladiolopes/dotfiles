@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+
+set -uo pipefail
+DOTFILES_ROOT=${DOTFILES_ROOT:-$(CDPATH='' cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)}
+export DOTFILES_ROOT
+# shellcheck disable=SC1091
+source "$DOTFILES_ROOT/scripts/lib/common.sh"
+# shellcheck disable=SC1091
+source "$DOTFILES_ROOT/scripts/lib/userdirs.sh"
+
+target=''
+while (($#)); do
+  case $1 in
+    --target)
+      shift
+      (($#)) || {
+        printf 'dotfiles: --target requires a path\n' >&2
+        exit 2
+      }
+      target=$1
+      ;;
+    -h | --help)
+      printf 'Usage: ./scripts/converge-userdirs --target PATH\n'
+      exit 0
+      ;;
+    *)
+      printf 'dotfiles: unknown option: %s\n' "$1" >&2
+      exit 2
+      ;;
+  esac
+  shift
+done
+
+[[ -n $target ]] || {
+  printf 'dotfiles: --target is required\n' >&2
+  exit 2
+}
+[[ $target = /* && -d $target ]] || {
+  printf 'dotfiles: target must be an absolute directory: %s\n' "$target" >&2
+  exit 2
+}
+dotfiles_load_userdirs "$DOTFILES_ROOT/packages/userdirs/.config/user-dirs.dirs" || {
+  printf 'dotfiles: %s\n' "$DOTFILES_ERROR" >&2
+  exit 2
+}
+
+for relative in "${DOTFILES_USERDIR_RELATIVES[@]}"; do
+  destination="$target/$relative"
+  if obstruction=$(dotfiles_userdir_symlink_ancestor "$target" "$relative"); then
+    printf 'dotfiles: refusing symbolic-link ancestor for user directory: %s\n' "${obstruction#"$target/"}" >&2
+    exit 1
+  fi
+  if [[ -L $destination && ! -d $destination ]]; then
+    printf 'dotfiles: refusing dangling user-directory link: %s\n' "$relative" >&2
+    exit 1
+  elif [[ -e $destination && ! -d $destination ]]; then
+    printf 'dotfiles: refusing non-directory user path: %s\n' "$relative" >&2
+    exit 1
+  fi
+done
+
+for relative in "${DOTFILES_USERDIR_RELATIVES[@]}"; do
+  [[ -d $target/$relative ]] || mkdir -p -- "$target/$relative" || exit 1
+done

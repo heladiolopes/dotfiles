@@ -1,0 +1,177 @@
+@import "current-theme.css";
+
+* {
+  font-family: "JetBrainsMono Nerd Font", "Font Awesome 6 Free", "Roboto", sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  min-height: 0;
+}
+
+window#waybar {
+  color: @foreground;
+  background: @background;
+
+  border: 2px solid @foreground;
+  border-radius: 5px;
+
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.modules-left { margin-left: 10px; }
+.modules-right { margin-right: 10px; }
+
+/*
+ * BUTTON
+ */
+button {
+  color: @foreground;
+  background: @surface;
+  margin: 4px 2px;
+  padding: 0 10px;
+
+  border-radius: 5px;
+
+  transition: background-color 0.2s, box-shadow 0.2s;
+}
+
+button:hover  { background: @overlay; }
+button:active { background: @selected; color: @background; }
+
+/*
+ * SEPARATOR
+ */
+#custom-sep { font-size: 16px; }
+
+/*
+ * WORKSPACES
+ */
+#workspaces button {
+  border: 2px solid @foreground;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+#workspaces button.active {
+  background: @foreground;
+  border: 2px solid @background;
+  color: @background;
+}
+
+#workspaces button:hover { background: @overlay; color: @foreground; }
+#workspaces button.urgent { background: @danger; }
+#workspaces button.empty { color: @muted; border: 2px solid @overlay; }
+
+#window, #window * { font-size: 12px; font-weight: normal; }
+#window { padding: 0 12px; margin: 5px 1px; }
+
+/*
+ * NON-WORKSPACE BUTTONS DEFAULTS
+ */
+#custom-power,
+#custom-launcher,
+#clock,
+#custom-idle_inhibitor,
+#bluetooth,
+#network,
+#cpu,
+#memory,
+#pulseaudio,
+#battery,
+#power-profiles-daemon,
+#custom-notification {
+  color: @foreground;
+  background: @surface;
+
+  padding: 0 10px;
+  margin: 5px 1px;
+  min-width: 15px;
+
+  border-radius: 5px;
+  border: 2px solid @overlay;
+
+  transition: background-color 0.2s, color 0.2s;
+}
+
+/*
+ * NON-WORKSPACE BUTTONS:HOVER DEFAULTS
+ */
+#custom-power:hover,
+#custom-launcher:hover,
+#clock:hover,
+#custom-idle_inhibitor:hover,
+#bluetooth:hover,
+#network:hover,
+#cpu:hover,
+#memory:hover,
+#pulseaudio:hover,
+#battery:hover,
+#power-profiles-daemon:hover,
+#custom-notification:hover {
+  color: @background;
+  background: @accent;
+  border: 2px solid @border;
+}
+
+/*
+ * NON-WORKSPACE BUTTONS BEHAVIOR
+ */
+#custom-power { padding: 0 13px 0 10px; }
+#custom-power:hover { background: @danger; }
+
+/* #custom-launcher: no specific configuration */
+
+/* #clock: no specific configuration */
+
+#custom-idle_inhibitor { padding: 0 14px 0 10px; }
+#custom-idle_inhibitor:hover { background: @success; }
+#custom-idle_inhibitor.activated { color: @success; }
+#custom-idle_inhibitor.activated:hover { color: @success; background: @surface; }
+#custom-idle_inhibitor.deactivated { color: @foreground; }
+
+/* #bluetooth: no specific configuration */
+
+#network.disconnected { color: @muted; }
+#network.disconnected:hover { color: @muted; background: @surface; }
+
+/* #cpu: no specific configuration */
+
+/* #memory: no specific configuration */
+
+#pulseaudio.muted { color: @muted; }
+#pulseaudio.muted:hover { color: @muted; background: @surface; }
+
+#battery.charging,
+#battery.plugged {
+  color: @success;
+}
+#battery.charging:hover,
+#battery.plugged:hover {
+  color: @success;
+  background: @surface;
+}
+#battery.critical:not(.charging) {
+  color: @foreground;
+  background: @danger;
+
+  animation-name: blink;
+  animation-duration: 0.6s;
+  animation-timing-function: steps(12);
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+@keyframes blink {
+  to {
+    color: @danger;
+    background: @surface;
+  }
+}
+
+#custom-notification { padding: 0 11px 0 10px; }
+#custom-notification.notification,
+#custom-notification.dnd-notification,
+#custom-notification.inhibited-notification,
+#custom-notification.dnd-inhibited-notification {
+  color: @foreground;
+  background: @accent;
+  border: 2px solid @border;
+}
+

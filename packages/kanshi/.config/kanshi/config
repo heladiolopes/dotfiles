@@ -1,0 +1,14 @@
+profile laptop {
+  output eDP-1 enable mode 1920x1080@120Hz position 0,0 scale 1
+}
+
+# Match this display before the generic HDMI profile; its native HDMI mode is 720p.
+profile docked-samsung {
+  output eDP-1 disable
+  output "Samsung Electric Company SAMSUNG Unknown" enable mode 1280x720@60Hz position 0,0 scale 1
+}
+
+profile docked {
+  output eDP-1    disable
+  output HDMI-A-1 enable  mode 1920x1080@60Hz position 0,0 scale 1
+}
